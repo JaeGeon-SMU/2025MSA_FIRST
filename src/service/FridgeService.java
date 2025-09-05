@@ -1,18 +1,34 @@
 package service;
 
+import java.util.HashMap;
+import java.util.Queue;
+
+import domain.Food;
+import domain.Fridge;
 import domain.HomeFood;
+import domain.User;
 
 public class FridgeService {
 	
+	private User user;
+	private Fridge fridge;
 	
+
+	public FridgeService(User user) {
+		this.user = user;
+		this.fridge = user.getFridge();
+	}
+
 	/*
 	 * 냉장고에 음식을 넣는 함수
 	 */
 	public void putFood(String name, int count) {
-		new HomeFood();
 		
-		
-		
+		//개수만큼 음식 추가
+		for(int i=0; i<count; i++) {
+			fridge.getFoodList().get(name).add(new HomeFood());
+		}
+				
 	}
 	
 	/*
@@ -20,6 +36,7 @@ public class FridgeService {
 	 */
 	public void foodList() {
 		
+		System.out.println(fridge.getFoodList().toString());		
 		
 	}
 	
@@ -29,6 +46,10 @@ public class FridgeService {
 	 */
 	public void checkFood(String name) {
 		
+		Queue<Food> queue = fridge.getFoodList().get(name);
+		if(queue.size() < ((HomeFood)(queue.peek())).getReorderPoint()) {
+			System.out.println("최소 수량 이하입니다.");
+		}
 		
 	}
 	
@@ -38,6 +59,9 @@ public class FridgeService {
 	 */
 	public void eatFood(String name){
 		
+		System.out.println("음식을 먹었습니다.");
+		checkFood(name);
+		fridge.getFoodList().get(name).remove();
 		
 	}
 	
@@ -47,6 +71,7 @@ public class FridgeService {
 	 */
 	public void deleteFood(String name) {
 		
+		fridge.getFoodList().get(name).clear();
 		
 	}
 	
