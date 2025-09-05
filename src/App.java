@@ -1,3 +1,4 @@
+import service.FridgeService;
 
 public class App {
 
