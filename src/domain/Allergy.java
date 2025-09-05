@@ -1,0 +1,25 @@
+package domain;
+
+public enum Allergy{
+	EGGS, 
+	MILK, 
+	BUCKWHEAT, 
+	PEANUT, 
+	SOYBEAN, 
+	WHEAT, 
+	MACKEREL, 
+	CRAB,
+	SHRIMP, 
+	PORK, 
+	PEACH, 
+	TOMATO, 
+	SULFUROUSACIDS, 
+	WALNUT, 
+	CHICKEN, 
+	BEEF, 
+	SQUID, 
+	OYSTER, 
+	ABALONE, 
+	MUSSEL, 
+	PINENUT
+}
