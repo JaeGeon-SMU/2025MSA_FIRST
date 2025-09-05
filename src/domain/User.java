@@ -31,7 +31,7 @@ public class User {
 		return this.targetWeight;
 	}
 	public void setTargetWeight(double targetWeight){
-		this.currentWeight=targetWeight;
+		this.targetWeight=targetWeight;
 	}
 	public int getTargetProtein() {
 		return this.targetProtein;
