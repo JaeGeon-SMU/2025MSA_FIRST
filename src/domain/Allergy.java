@@ -6,8 +6,8 @@ public enum Allergy{
 	BUCKWHEAT("메밀"), 
 	PEANUT("땅콩"), 
 	SOYBEAN("콩"), 
-	WHEAT("밀") 
-	MACKEREL("고등어") 
+	WHEAT("밀"), 
+	MACKEREL("고등어"), 
 	CRAB("게"),
 	SHRIMP("새우"), 
 	PORK("돼지"), 
