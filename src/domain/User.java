@@ -4,17 +4,17 @@ import java.util.List;
 
 public class User {
 	// Instance Variable
-	private double currentWeight;
-	private double targetWeight;
-	private int targetProtein;
-	private int targetCalories;
-	private int minMeal;
-	private int age;
-	private double height;
-	private int targetWater;
-	private List<Allergy> allergy;
-	private int exerciseCarlories;
-	private Fridge fridge;
+	private double currentWeight; //현재체중
+	private double targetWeight; // 목표체중
+	private int targetProtein; //목표단백질
+	private int targetCalories; //목표 칼로리
+	private int minMeal;  //최소끼니
+	private int age;      //연령
+	private double height; //키
+	private int targetWater; //목표물
+	private List<Allergy> allergy; //알러지리스트 배열
+	private int exerciseCarlories; //운동소모칼로리
+	private Fridge fridge; //냉장고
 	//생성자
 	User(){
 		
