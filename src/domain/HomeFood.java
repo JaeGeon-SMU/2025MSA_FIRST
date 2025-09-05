@@ -1,5 +1,8 @@
 package domain;
 
-public class HomeFood {
+import java.time.LocalDate;
 
+public class HomeFood extends Food {
+	private LocalDate expireDate;
+	private int reorderPoint;
 }
