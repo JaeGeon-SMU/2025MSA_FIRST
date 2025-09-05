@@ -1,6 +1,7 @@
 package service;
 
 
+import domain.Food;
 import domain.Labels;
 import domain.OutFormat;
 import domain.User;
@@ -27,7 +28,7 @@ public class UserService {
 	//전날 푸드 list 갯수 체크해서 알람, user에 객체 없음
 	void notifyEmergencyDay(User user) {
 	}
-	
+	/*
 	//목표 칼로리 - 현재 섭취량(for문 합산 , List<Food>) 
 	void checkDailyDiet(User user) {
 		int eatedTotalCalories = 0;
@@ -45,7 +46,7 @@ public class UserService {
 		}
 		of.print(Labels.TARGETPROTEIN.getValue() , (user.getTargetProtein()-eatedToalProtein );		
 	}
-	
+	*/
 	//통계쪽, 후 개발 필요, 파일 입출력 고민
 	void checkWeeklyGoal(User user) {
 		

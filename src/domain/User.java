@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class User {
+public class User implements Serializable{
 	// Instance Variable
 	private double currentWeight;
 	private double targetWeight;
@@ -15,9 +16,14 @@ public class User {
 	private List<Allergy> allergy;
 	private int exerciseCarlories;
 	private Fridge fridge;
+	private String userId; //로그인 용
+	private String password;
+	
 	//생성자
-	User(){
-		
+	public User(String userId,String password,int i){
+		this.userId =userId;
+		this.password = password;
+		this.exerciseCarlories = i;
 	}
 	
 	//getter setter
@@ -89,7 +95,22 @@ public class User {
 		this.fridge=fridge;
 	}
 	
-	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	
 	
 }
