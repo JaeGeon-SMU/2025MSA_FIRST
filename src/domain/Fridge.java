@@ -14,6 +14,12 @@ public class Fridge implements Serializable{
 		return foodList;
 	}
 	
+	
+	
+	public void setWaterCnt(int waterCnt) {
+		this.waterCnt = waterCnt;
+	}
+
 	public int getWaterCnt() {
 		return waterCnt;
 	}
