@@ -1,23 +1,143 @@
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
+
+import domain.HomeFood;
 import domain.User;
+import domain.dto.SignUpInfo;
 import repo.UserRepo;
-import service.FridgeService;
+import service.AuthenticationService;
+import domain.Allergy;
+import domain.User;
+import domain.dto.SignUpInfo;
+import service.AuthenticationService;
+import service.UserService;
+
 
 public class App {
 
 	public static void main(String[] args) {
-		UserRepo userRepo = new UserRepo();
-		userRepo.save(new User("test3","password321312",200));
-		Map<String, User> all = userRepo.getAll();
-		Iterator<Map.Entry<String, User>> it = all.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, User> entry = it.next();
-            String key = entry.getKey();
-            User user = entry.getValue();
-            System.out.println("ID: " + key + ", User: " + user.getUserId() + "  " + user.getPassword());
-        }
+		 AuthenticationService auth = new AuthenticationService();
+		    UserService userService = new UserService();
+		    Scanner sc = new Scanner(System.in);
+		    User user = null;
+
+		    while (user == null) {
+	            System.out.println("1. 회원가입 2. 로그인 3. 종료");
+
+	            // 숫자 아닐 때 다시 입력
+	            int num;
+	            while (true) {
+	                System.out.print("선택: ");
+	                String in = sc.nextLine().trim();
+	                try {
+	                    num = Integer.parseInt(in);
+	                    if (num < 1 || num > 3) {
+	                        System.out.println("1, 2, 3 중에서 선택하세요.");
+	                        continue;
+	                    }
+	                    break;
+	                } catch (NumberFormatException e) {
+	                    System.out.println("숫자를 입력하세요.");
+	                }
+	            }
+
+	            switch (num) {
+	                case 1: { // 회원가입
+	                    System.out.print("Id 입력 : ");
+	                    String newId = sc.nextLine().trim();
+
+	                    System.out.print("password 입력 : ");
+	                    String newPw = sc.nextLine();
+
+	                    System.out.print("현재 체중(kg): ");
+	                    double currentWeight = Double.parseDouble(sc.nextLine());
+
+	                    System.out.print("목표 체중(kg): ");
+	                    double targetWeight = Double.parseDouble(sc.nextLine());
+
+	                    System.out.print("목표 단백질(g): ");
+	                    int targetProtein = Integer.parseInt(sc.nextLine());
+
+	                    System.out.print("목표 칼로리(kcal): ");
+	                    int targetCalories = Integer.parseInt(sc.nextLine());
+
+	                    System.out.print("최소 끼니 수: ");
+	                    int minMeal = Integer.parseInt(sc.nextLine());
+
+	                    System.out.print("나이: ");
+	                    int age = Integer.parseInt(sc.nextLine());
+
+	                    System.out.print("키(cm): ");
+	                    double height = Double.parseDouble(sc.nextLine());
+
+	                    System.out.print("목표 수분 섭취량(ml): ");
+	                    int targetWater = Integer.parseInt(sc.nextLine());
+
+	                    System.out.print("알레르기(쉼표로 구분, 예: EGGS,MILK / 없으면 엔터): ");
+	                    String allergyInput = sc.nextLine().trim();
+
+	                    List<Allergy> allergy = new ArrayList<>();
+	                    if (!allergyInput.isEmpty()) {
+	                        for (String t : allergyInput.split(",")) {
+	                            String key = t.trim().toUpperCase();
+	                            try {
+	                                allergy.add(Allergy.valueOf(key));
+	                            } catch (IllegalArgumentException e) {
+	                                System.out.println("알 수 없는 알레르기 무시: " + key);
+	                            }
+	                        }
+	                    }
+
+	                    SignUpInfo info = new SignUpInfo(
+	                            newId, newPw,
+	                            currentWeight, targetWeight,
+	                            targetProtein, targetCalories,
+	                            minMeal, age, height,
+	                            targetWater, allergy
+	                    );
+	                    auth.signUp(info);
+	                    break;
+	                }
+	                case 2: { // 로그인
+	                    System.out.print("Id 입력 : ");
+	                    String userId = sc.nextLine();
+	                    System.out.print("password 입력 : ");
+	                    String password = sc.nextLine();
+	                    user = auth.login(userId, password);
+	                    if (user == null) System.out.println("로그인 실패");
+	                    break;
+	                }
+	                case 3:
+	                    System.exit(0);
+	                default:
+	                    System.out.println("다시 선택");
+	            }
+	        }
+
+	        System.out.println("로그인 성공");
+	        System.out.println("오늘의 운동 칼로리를 입력해주세요");
+	        
+	        int exerciseCalories;
+	        while (true) {
+	            System.out.print("> ");
+	            String input = sc.nextLine().trim();
+	            try {
+	                exerciseCalories = Integer.parseInt(input);
+	                if (exerciseCalories < 0) {
+	                    System.out.println("0 이상의 정수를 입력하세요.");
+	                    continue;
+	                }
+	                break;
+	            } catch (NumberFormatException e) {
+	                System.out.println("숫자만 입력하세요.");
+	            }
+	        }
+
+		    user.setExerciseCarlories(exerciseCalories);
+		    System.out.println(user.getExerciseCarlories());
+		    sc.close();
 	}
 
 }
