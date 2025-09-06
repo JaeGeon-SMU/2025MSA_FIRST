@@ -13,16 +13,12 @@ import domain.User;
 public class UserService {
 	OutFormat of = new OutFormat();
 	
-	//user 현재 물양 필요
-	public void checkWaterIntake(User user){
-//		of.print(Labels.CURRENTWATTERINTAKE, user.getTargetWater()); 
-	}
 	//유저 객체 받아서 유저의 water만 꺼내 씀
 	public void viewMemberInfo(User user) {
-		of.print(Labels.AGE.getValue() , user.getAge());
+		of.print(Labels.BIRTHYEAR.getValue() , user.getBirthYear());
 		of.print(Labels.HEIGHT.getValue() , user.getHeight());
 		of.print(Labels.CURRENTWETIGHT.getValue() , user.getTargetWeight());
-//		of.print(Labels.CURRENTWATTERINTAKE.getValue() , user.getCurrentWater());
+		of.print(Labels.CURRENTWATTERINTAKE.getValue(), user.getGoalHistory().get(LocalDate.now()).getCurrentWater());
 		of.print(Labels.TARGETWATER.getValue(), user.getTargetWater());
 		of.print(Labels.TARGETPROTEIN.getValue(), user.getTargetProtein());
 		of.print(Labels.TARGETCALORIES.getValue(), user.getTargetCalories());
