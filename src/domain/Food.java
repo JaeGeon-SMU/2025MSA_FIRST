@@ -24,6 +24,10 @@ public abstract class Food {
 		return this.calorie;
 	}
 	
+	public int getProtein() {
+		return this.protein;
+	}
+	
 	
 	 @Override
 	 public String toString() {

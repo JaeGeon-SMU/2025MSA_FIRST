@@ -80,11 +80,11 @@ public class FridgeService {
 	    List<HomeFood> sortedFoods = quickSort(allFoods);
 	    
 	 // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
-	    int displayCount = sortedFoods.isEmpty() ? 5 : sortedFoods.get(0).getSortreorderPoint();
+	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
-	    for (int i = 0; i < sortedFoods.size() && i < displayCount; i++) {
+	    System.out.println("=== ⏰ 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
 	}
@@ -125,8 +125,9 @@ public class FridgeService {
 	    return result;
 	}
 	
+	
 	/*
-	 * 냉장고 음식의 목록을 칼로리가 높은순으로 정렬해서 리턴하는 함수
+	 * 냉장고 음식의 목록을 단백질이 높은순으로 정렬해서 리턴하는 함수
 	 */
 	public void sortProteinFoodList() {
 	    // 냉장고에 음식이 없으면 메시지 출력
@@ -140,14 +141,14 @@ public class FridgeService {
 	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
 	            .collect(java.util.stream.Collectors.toList());
 
-	    // 병합 정렬로Protein 기준 정렬
+	    // 병합 정렬로 Protein 기준 정렬
 	    List<HomeFood> sortedFoods = mergeSort(allFoods);
 	    
 	    // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 🍗 단백질 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
@@ -178,8 +179,8 @@ public class FridgeService {
 	    int rightIndex = 0;
 
 	    while (leftIndex < left.size() && rightIndex < right.size()) {
-	        // 왼쪽과 오른쪽의 칼로리 값을 비교
-	        if (left.get(leftIndex).getCalorie() >= right.get(rightIndex).getCalorie()) {
+	        // 왼쪽과 오른쪽의 단백질 값을 비교
+	        if (left.get(leftIndex).getProtein() >= right.get(rightIndex).getProtein()) {
 	            mergedList.add(left.get(leftIndex));
 	            leftIndex++;
 	        } else {
@@ -201,6 +202,42 @@ public class FridgeService {
 
 	    return mergedList;
 	}
+	
+	
+	/*
+	 * 냉장고 음식의 목록을 칼로리가 높은순으로 정렬해서 리턴하는 함수
+	 */
+	public void sortCalorieFoodList() {
+	    // 냉장고에 음식이 없으면 메시지 출력
+	    if (fridge.getFoodList().isEmpty()) {
+	        System.out.println("냉장고가 비어 있습니다.");
+	        return;
+	    }
+
+	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
+	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
+	            .collect(java.util.stream.Collectors.toList());
+
+	    // 힙 정렬로 Calorie 기준 정렬
+	    List<HomeFood> sortedFoods = heapSort(allFoods);
+	    
+	    // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
+	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
+
+	    // 콘솔 출력
+	    System.out.println("=== 🍫 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    for (int i = 0; i < displayCount; i++) {
+	        System.out.println(sortedFoods.get(i));
+	    }
+	}
+	
+		// 힙 정렬 구현
+		private List<HomeFood> heapSort(List<HomeFood> foods) {
+			List<HomeFood> heapList = new ArrayList<>();
+			//미완입니다.
+			return heapList;
+		}
 	
 	
 	/*
