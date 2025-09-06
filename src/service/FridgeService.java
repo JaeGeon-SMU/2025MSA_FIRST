@@ -1,8 +1,13 @@
 package service;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 import domain.Food;
 import domain.FoodFactory;
@@ -23,6 +28,7 @@ public class FridgeService {
 		this.fridge = user.getFridge();
 	}
 
+
 	/*
 	 * 냉장고에 음식을 넣는 함수
 	 */
@@ -34,6 +40,7 @@ public class FridgeService {
 		}
 				
 	}
+
 	
 	/*
 	 * 냉장고의 음식 목록을 보여주는 함수
@@ -51,6 +58,69 @@ public class FridgeService {
 		}
 		
 	}
+	
+	
+	/*
+	 * 냉장고 음식의 목록을 유통기한이 임박한 순으로 정렬해서 리턴하는 함수
+	 */
+	public void sortExpireDateFoodList() {
+	    // 1. 냉장고에 음식이 없으면 메시지 출력
+	    if (fridge.getFoodList().isEmpty()) {
+	        System.out.println("냉장고가 비어 있습니다.");
+	        return;
+	    }
+
+	    // 2. 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
+	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
+	            .collect(java.util.stream.Collectors.toList());
+
+	    // 3. 퀵정렬로 expireDate 기준 정렬
+	    List<HomeFood> sortedFoods = quickSort(allFoods);
+
+	    // 4. 콘솔 출력
+	    for (HomeFood food : sortedFoods) {
+	    	System.out.println(food);
+	    }
+	}
+
+	// 퀵정렬 구현
+	private List<HomeFood> quickSort(List<HomeFood> foods) {
+	    if (foods.size() <= 1) return foods;
+
+	    HomeFood pivot = foods.get(foods.size() / 2);
+	    LocalDate pivotDate = pivot.getExpireDate();
+
+	    List<HomeFood> left = new java.util.ArrayList<>();
+	    List<HomeFood> right = new java.util.ArrayList<>();
+	    List<HomeFood> equal = new java.util.ArrayList<>();
+	    List<HomeFood> noExpireDate = new java.util.ArrayList<>(); // null 유통기한을 담을 리스트
+
+	    for (HomeFood f : foods) {
+	        if (f.getExpireDate() == null) {
+	            noExpireDate.add(f); // 유통기한이 없는 음식은 따로 분리
+	        } else if (pivotDate == null) {
+	            // pivot이 null인 경우, null이 아닌 음식들을 right로 보냄
+	            right.add(f);
+	        } else if (f.getExpireDate().isBefore(pivotDate)) {
+	            left.add(f);
+	        } else if (f.getExpireDate().isAfter(pivotDate)) {
+	            right.add(f);
+	        } else {
+	            equal.add(f);
+	        }
+	    }
+
+	    List<HomeFood> result = new java.util.ArrayList<>();
+	    result.addAll(quickSort(left));
+	    result.addAll(equal);
+	    result.addAll(quickSort(right));
+	    result.addAll(noExpireDate); // 유통기한이 없는 음식은 맨 뒤에 추가
+
+	    return result;
+	}
+	
+	
 	
 	/*
 	 * 음식 수량 체크 함수
