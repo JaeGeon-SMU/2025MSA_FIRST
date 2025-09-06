@@ -5,7 +5,7 @@ public enum Allergy{
 	MILK("우유"), 
 	BUCKWHEAT("메밀"), 
 	PEANUT("땅콩"), 
-	SOYBEAN("콩"), 
+	SOYBEAN("대두"), 
 	WHEAT("밀"), 
 	MACKEREL("고등어"), 
 	CRAB("게"),
@@ -21,7 +21,7 @@ public enum Allergy{
 	OYSTER("굴"), 
 	ABALONE("전복"), 
 	MUSSEL("조개"), 
-	PINENUT("호두");
+	PINENUT("잣");
 	private final String label;
 
     Allergy(String label) {
@@ -29,7 +29,7 @@ public enum Allergy{
     }
 
     public String getLabel() {
-        return label;
+        return this.label;
     }
 }
 
