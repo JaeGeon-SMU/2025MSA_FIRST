@@ -1,8 +1,12 @@
 package domain;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class User {
+public class User implements Serializable{
 	// Instance Variable
 	private double currentWeight;
 	private double targetWeight;
@@ -13,12 +17,53 @@ public class User {
 	private double height;
 	private int targetWater;
 	private List<Allergy> allergy;
+	private Map<LocalDate, Food> eatingHistory;
 	private int exerciseCarlories;
 	private Fridge fridge;
-	//생성자
-	User(){
-		
+	private String userId; //로그인 용
+	private String password;
+	private String passwordHash;
+	private String passwordSalt;
+	
+	//생성자 지울 예정
+	public User(String userId,String password,int i){
+		this.userId =userId;
+		this.password = password;
+		this.exerciseCarlories = i;
 	}
+	
+	public User(String userId,
+            String passwordHash,
+            String passwordSalt,
+            double currentWeight,
+            double targetWeight,
+            int targetProtein,
+            int targetCalories,
+            int minMeal,
+            int age,
+            double height,
+            int targetWater,
+            List<Allergy> allergy) {
+
+    this.userId = userId;
+    this.passwordHash = passwordHash;
+    this.passwordSalt = passwordSalt;
+
+    this.currentWeight = currentWeight;
+    this.targetWeight = targetWeight;
+    this.targetProtein = targetProtein;
+    this.targetCalories = targetCalories;
+    this.minMeal = minMeal;
+    this.age = age;
+    this.height = height;
+    this.targetWater = targetWater;
+    this.allergy = allergy;
+
+    // 시스템에서 자동 관리
+    this.exerciseCarlories = 0;
+    this.fridge = new Fridge();
+    this.eatingHistory = new HashMap<>();
+}
 	
 	//getter setter
 	public double getCurrentWeight() {
@@ -89,7 +134,32 @@ public class User {
 		this.fridge=fridge;
 	}
 	
-	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPasswordHash() {
+		// TODO Auto-generated method stub
+		return this.passwordHash;
+	}
+
+	public String getPasswordSalt() {
+		// TODO Auto-generated method stub
+		return this.passwordSalt;
+	}
+
 	
 	
 }
