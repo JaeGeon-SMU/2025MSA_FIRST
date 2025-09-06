@@ -1,6 +1,7 @@
 package service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -95,10 +96,10 @@ public class FridgeService {
 	    HomeFood pivot = foods.get(foods.size() / 2);
 	    LocalDate pivotDate = pivot.getExpireDate();
 
-	    List<HomeFood> left = new java.util.ArrayList<>();
-	    List<HomeFood> right = new java.util.ArrayList<>();
-	    List<HomeFood> equal = new java.util.ArrayList<>();
-	    List<HomeFood> noExpireDate = new java.util.ArrayList<>();
+	    List<HomeFood> left = new ArrayList<>();
+	    List<HomeFood> right = new ArrayList<>();
+	    List<HomeFood> equal = new ArrayList<>();
+	    List<HomeFood> noExpireDate = new ArrayList<>();
 
 	    for (HomeFood f : foods) {
 	        if (f.getExpireDate() == null) {
@@ -114,7 +115,7 @@ public class FridgeService {
 	        }
 	    }
 
-	    List<HomeFood> result = new java.util.ArrayList<>();
+	    List<HomeFood> result = new ArrayList<>();
 	    result.addAll(quickSort(left));
 	    result.addAll(equal);
 	    result.addAll(quickSort(right));
@@ -123,6 +124,82 @@ public class FridgeService {
 	    return result;
 	}
 	
+	/*
+	 * 냉장고 음식의 목록을 칼로리가 높은순으로 정렬해서 리턴하는 함수
+	 */
+	public void sortProteinFoodList() {
+	    // 냉장고에 음식이 없으면 메시지 출력
+	    if (fridge.getFoodList().isEmpty()) {
+	        System.out.println("냉장고가 비어 있습니다.");
+	        return;
+	    }
+
+	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
+	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
+	            .collect(java.util.stream.Collectors.toList());
+
+	    // 퀵정렬로 expireDate 기준 정렬
+	    List<HomeFood> sortedFoods = mergeSort(allFoods);
+	    
+	    // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
+	    int displayCount = sortedFoods.isEmpty() ? 5 : sortedFoods.get(0).getSortreorderPoint();
+
+	    // 콘솔 출력
+	    System.out.println("=== 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    for (int i = 0; i < sortedFoods.size() && i < displayCount; i++) {
+	        System.out.println(sortedFoods.get(i));
+	    }
+	}
+	
+	// 병합 정렬 구현
+	private List<HomeFood> mergeSort(List<HomeFood> foods) {
+		if (foods.size() <= 1) return foods;
+		
+		int mid = foods.size() / 2;
+		List<HomeFood> leftHalf = foods.subList(0, mid);
+		List<HomeFood> rightHalf = foods.subList(mid, foods.size());
+		
+
+	    // 쪼갠 두 부분을 재귀적으로 정렬
+	    List<HomeFood> sortedLeft = mergeSort(leftHalf);
+	    List<HomeFood> sortedRight = mergeSort(rightHalf);
+
+	    // 정렬된 두 부분을 합치기
+	    return merge(sortedLeft, sortedRight);
+	}
+
+	// 병합을 담당하는 함수
+	private List<HomeFood> merge(List<HomeFood> left, List<HomeFood> right) {
+		List<HomeFood> mergedList = new ArrayList<>();
+		// 두 리스트를 비교하기 위한 인덱스 변수
+	    int leftIndex = 0;
+	    int rightIndex = 0;
+
+	    while (leftIndex < left.size() && rightIndex < right.size()) {
+	        // 왼쪽과 오른쪽의 칼로리 값을 비교
+	        if (left.get(leftIndex).getCalorie() >= right.get(rightIndex).getCalorie()) {
+	            mergedList.add(left.get(leftIndex));
+	            leftIndex++;
+	        } else {
+	            mergedList.add(right.get(rightIndex));
+	            rightIndex++;
+	        }
+	    }
+
+	    // 리스트에 남은 원소들을 모두 추가
+	    while (leftIndex < left.size()) {
+	        mergedList.add(left.get(leftIndex));
+	        leftIndex++;
+	    }
+	    
+	    while (rightIndex < right.size()) {
+	        mergedList.add(right.get(rightIndex));
+	        rightIndex++;
+	    }
+
+	    return mergedList;
+	}
 	
 	
 	/*

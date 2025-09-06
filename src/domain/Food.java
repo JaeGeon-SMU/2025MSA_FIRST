@@ -20,6 +20,10 @@ public abstract class Food {
 		this.allergy = allergy;		
 	}
 	
+	public int getCalorie() {
+		return this.calorie;
+	}
+	
 	
 	 @Override
 	 public String toString() {
