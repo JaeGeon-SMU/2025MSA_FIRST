@@ -37,9 +37,9 @@ public class AuthenticationService {
 	
 	public void signUp(SignUpInfo signUpInfo) {
 		  String salt = SHA256PasswordSecurity.generateSalt();
-	        String hash = SHA256PasswordSecurity.hashPassword(signUpInfo.getPassword(), salt);
+	      String hash = SHA256PasswordSecurity.hashPassword(signUpInfo.getPassword(), salt);
 	
-	        User user = new User(
+	      User user = new User(
 	                signUpInfo.getUserId(),
 	                hash,               // passwordHash
 	                salt,               // passwordSalt
@@ -52,9 +52,9 @@ public class AuthenticationService {
 	                signUpInfo.getHeight(),
 	                signUpInfo.getTargetWater(),
 	                signUpInfo.getAllergy()
-	        );
-	
-	        userRepo.save(user);
-	        System.out.println("회원가입 완료: " + signUpInfo.getUserId());
+	      );
+	      
+	      userRepo.save(user);
+	      System.out.println("회원가입 완료: " + signUpInfo.getUserId());
     }
 }
