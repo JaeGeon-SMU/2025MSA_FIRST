@@ -15,9 +15,10 @@ public class User implements Serializable{
 	private int minMeal;
 	private int birthYear;
 	private double height;
-	private int targetWater;
+	private int targetWater; //목표 물 량
 	private List<Allergy> allergy;
-	private Map<LocalDate, Map<DailyGoalInfo,List<Food>>> eatingHistory;
+	private Map<LocalDate, List<Food>> eatingHistory;
+	private Map<LocalDate, DailyGoalInfo> goalHistory;
 	private int exerciseCarlories;
 	private Fridge fridge;
 	private String userId; //로그인 용
@@ -25,12 +26,6 @@ public class User implements Serializable{
 	private String passwordHash;
 	private String passwordSalt;
 	
-	//생성자 지울 예정
-	public User(String userId,String password,int i){
-		this.userId =userId;
-		this.password = password;
-		this.exerciseCarlories = i;
-	}
 	
 	public User(String userId,
             String passwordHash,
@@ -151,14 +146,17 @@ public class User implements Serializable{
 	}
 
 	public String getPasswordHash() {
-		// TODO Auto-generated method stub
 		return this.passwordHash;
 	}
 
 	public String getPasswordSalt() {
-		// TODO Auto-generated method stub
 		return this.passwordSalt;
 	}
+
+	public Map<LocalDate, Map<DailyGoalInfo, List<Food>>> getEatingHistory() {
+		return this.eatingHistory;
+	}
+
 
 	
 	
