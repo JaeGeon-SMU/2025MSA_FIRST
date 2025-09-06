@@ -21,7 +21,7 @@ public enum Labels{
 		this.value = value;
 	}
     public String getValue(){
-        return value;
+        return this.value;
     }
 	
 }

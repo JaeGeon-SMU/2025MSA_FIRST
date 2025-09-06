@@ -11,7 +11,7 @@ public class Fridge implements Serializable{
 	
 	
 	public HashMap<String, Queue<Food>> getFoodList() {
-		return foodList;
+		return this.foodList;
 	}
 	
 	// 생성자 추가 (소희)
@@ -25,7 +25,7 @@ public class Fridge implements Serializable{
 	}
 
 	public int getWaterCnt() {
-		return waterCnt;
+		return this.waterCnt;
 	}
 	
 	

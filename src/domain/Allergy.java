@@ -29,7 +29,7 @@ public enum Allergy{
     }
 
     public String getLabel() {
-        return label;
+        return this.label;
     }
 }
 
