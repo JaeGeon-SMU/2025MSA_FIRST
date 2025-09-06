@@ -47,9 +47,9 @@ public class FridgeTestMain {
 
 
 
-        // 3. 현재 냉장고 음식 목록 출력
-        System.out.println("\n--- 📝 현재 냉장고 음식 목록 ---");
-        fridgeService.foodList();
+//        // 3. 현재 냉장고 음식 목록 출력
+//        System.out.println("\n--- 📝 현재 냉장고 음식 목록 ---");
+//        fridgeService.foodList();
 
         // 유통기한 임박 순으로 정렬
         System.out.println("\n--- ⏰ 유통기한 임박 순 정렬 ---");
@@ -59,11 +59,11 @@ public class FridgeTestMain {
         System.out.println("\n--- 🍗 칼로리 높은 순 정렬 ---");
         fridgeService.sortProteinFoodList();
 
-        // 5. 음식 섭취 (가장 오래된 것부터 제거)
-        System.out.println("\n--- 😋 요거트 섭취 ---");
-        fridgeService.eatFood("요거트");
-        System.out.println("\n--- 📝 섭취 후 냉장고 음식 목록 ---");
-        fridgeService.foodList();
+//        // 5. 음식 섭취 (가장 오래된 것부터 제거)
+//        System.out.println("\n--- 😋 요거트 섭취 ---");
+//        fridgeService.eatFood("요거트");
+//        System.out.println("\n--- 📝 섭취 후 냉장고 음식 목록 ---");
+//        fridgeService.foodList();
     }
 }
 

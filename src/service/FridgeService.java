@@ -79,7 +79,7 @@ public class FridgeService {
 	    // 퀵정렬로 expireDate 기준 정렬
 	    List<HomeFood> sortedFoods = quickSort(allFoods);
 	    
-	    // 출력할 음식 개수 결정 (기본값 5)
+	 // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
 	    int displayCount = sortedFoods.isEmpty() ? 5 : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
@@ -93,13 +93,14 @@ public class FridgeService {
 	private List<HomeFood> quickSort(List<HomeFood> foods) {
 	    if (foods.size() <= 1) return foods;
 
+	    // 리스트 중간 위치의 음식을 피벗으로 지정
 	    HomeFood pivot = foods.get(foods.size() / 2);
 	    LocalDate pivotDate = pivot.getExpireDate();
 
-	    List<HomeFood> left = new ArrayList<>();
-	    List<HomeFood> right = new ArrayList<>();
-	    List<HomeFood> equal = new ArrayList<>();
-	    List<HomeFood> noExpireDate = new ArrayList<>();
+	    List<HomeFood> left = new ArrayList<>();         // 피벗보다 유통기한이 빠른
+	    List<HomeFood> right = new ArrayList<>();        // 피벗보다 유통기한이 늦은
+	    List<HomeFood> equal = new ArrayList<>();        // 피벗과 유통기한이 같은
+	    List<HomeFood> noExpireDate = new ArrayList<>(); // 유통기한이 없는
 
 	    for (HomeFood f : foods) {
 	        if (f.getExpireDate() == null) {
@@ -139,15 +140,15 @@ public class FridgeService {
 	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
 	            .collect(java.util.stream.Collectors.toList());
 
-	    // 퀵정렬로 expireDate 기준 정렬
+	    // 병합 정렬로Protein 기준 정렬
 	    List<HomeFood> sortedFoods = mergeSort(allFoods);
 	    
 	    // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
-	    int displayCount = sortedFoods.isEmpty() ? 5 : sortedFoods.get(0).getSortreorderPoint();
+	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
 	    System.out.println("=== 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
-	    for (int i = 0; i < sortedFoods.size() && i < displayCount; i++) {
+	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
 	}
@@ -234,6 +235,8 @@ public class FridgeService {
 		queue.remove();
 		
 	}
+	
+	
 	
 	/*
 	 * 음식 삭제 함수
