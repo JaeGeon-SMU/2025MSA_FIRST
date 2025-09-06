@@ -1,11 +1,19 @@
 import java.util.List;
 import java.util.Scanner;
 
+
+import domain.HomeFood;
+import domain.User;
+import domain.dto.SignUpInfo;
+import domain.food.homeFood.ChickenBreast;
+import repo.UserRepo;
+import service.AuthenticationService;
 import domain.Allergy;
 import domain.User;
 import domain.dto.SignUpInfo;
 import service.AuthenticationService;
 import service.UserService;
+
 
 public class App {
 
@@ -94,7 +102,6 @@ public class App {
 
 		    System.out.println("로그인 성공");
 		    sc.close();
-		
 	}
 
 }
