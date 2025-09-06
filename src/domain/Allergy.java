@@ -21,5 +21,16 @@ public enum Allergy{
 	OYSTER("굴"), 
 	ABALONE("전복"), 
 	MUSSEL("조개"), 
-	PINENUT("호두")
+	PINENUT("호두");
+	private final String label;
+
+    Allergy(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
 }
+
+
