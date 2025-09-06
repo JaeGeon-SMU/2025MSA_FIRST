@@ -27,6 +27,7 @@ public class UserService {
 	}
 	//전날 푸드 list 갯수 체크해서 알람, user에 객체 없음
 	void notifyEmergencyDay(User user) {
+		
 	}
 	/*
 	//목표 칼로리 - 현재 섭취량(for문 합산 , List<Food>) 

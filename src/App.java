@@ -1,81 +1,99 @@
-import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+import java.util.Scanner;
 
+import domain.Allergy;
 import domain.User;
 import domain.dto.SignUpInfo;
-import repo.UserRepo;
 import service.AuthenticationService;
-import service.FridgeService;
-import util.SHA256PasswordSecurity;
+import service.UserService;
 
 public class App {
 
 	public static void main(String[] args) {
 		 AuthenticationService auth = new AuthenticationService();
+		    UserService userService = new UserService();
+		    Scanner sc = new Scanner(System.in);
+		    User user = null;
 
-	        // 1) 회원가입
-	        SignUpInfo info = new SignUpInfo(
-	                "test3",            // userId
-	                "password321312",   // password(원문)
-	                70.0,               // currentWeight
-	                65.0,               // targetWeight
-	                100,                // targetProtein
-	                2000,               // targetCalories
-	                3,                  // minMeal
-	                25,                 // age
-	                175.0,              // height
-	                2000,               // targetWater
-	                null          // allergy (비어있음)
-	        );
-	        
-	        SignUpInfo info2 = new SignUpInfo(
-	                "test",            // userId
-	                "1234",   // password(원문)
-	                70.0,               // currentWeight
-	                65.0,               // targetWeight
-	                100,                // targetProtein
-	                2000,               // targetCalories
-	                3,                  // minMeal
-	                25,                 // age
-	                175.0,              // height
-	                2000,               // targetWater
-	                null          // allergy (비어있음)
-	        );
+		    while (user == null) {
+		        System.out.println("1. 회원가입 2. 로그인 3. 종료");
+		        System.out.print("선택: ");
+		        int num = sc.nextInt();
+		        sc.nextLine(); // 개행 제거
 
-	        auth.signUp(info); // 저장 + "회원가입 완료" 출력
-	        auth.signUp(info2); // 저장 + "회원가입 완료" 출력
+		        switch (num) {
+		        case 1:  // 회원가입
+		            System.out.print("Id 입력 : ");
+		            String newId = sc.nextLine().trim();
 
-	        System.out.println("\n=== 저장된 사용자 목록 ===");
-	        // 2) Repo에서 전체 사용자 출력
-	        UserRepo repo = auth.userRepo; // AuthenticationService 내부 repo 접근
-	        Map<String, User> all = repo.getAll();
-	        Iterator<Map.Entry<String, User>> it = all.entrySet().iterator();
-	        while (it.hasNext()) {
-	            Map.Entry<String, User> e = it.next();
-	            User u = e.getValue();
-	            System.out.println("ID: " + e.getKey()
-	                    + ", UserId: " + u.getUserId()
-	                    + ", Hash: " + u.getPasswordHash()
-	                    + ", Salt: " + u.getPasswordSalt());
-	        }
+		            System.out.print("password 입력 : ");
+		            String newPw = sc.nextLine();
 
-	        System.out.println("\n=== 로그인 테스트 ===");
-	        // 3) 로그인 성공 케이스
-	        User ok = auth.login("test3", "password321312");
-	        System.out.println("로그인 성공? " + (ok != null));
+		            System.out.print("현재 체중(kg): ");
+		            double currentWeight = Double.parseDouble(sc.nextLine());
 
-	        // 4) 로그인 실패 케이스
-	        User fail = auth.login("test3", "wrong-password");
-	        System.out.println("잘못된 비번으로 로그인 성공? " + (fail != null));
-	        
-	        System.out.println("\n=== 로그인 테스트 ===");
-	        // 3) 로그인 성공 케이스
-	        User ok2 = auth.login("test44", "1234");
-	        System.out.println("로그인 성공? " + (ok2 != null));
+		            System.out.print("목표 체중(kg): ");
+		            double targetWeight = Double.parseDouble(sc.nextLine());
 
-	        // 4) 로그인 실패 케이스
-	        User fail2 = auth.login("test", "1234");
-	        System.out.println("잘못된 비번으로 로그인 성공? " + (fail2 != null));
+		            System.out.print("목표 단백질(g): ");
+		            int targetProtein = Integer.parseInt(sc.nextLine());
+
+		            System.out.print("목표 칼로리(kcal): ");
+		            int targetCalories = Integer.parseInt(sc.nextLine());
+
+		            System.out.print("최소 끼니 수: ");
+		            int minMeal = Integer.parseInt(sc.nextLine());
+
+		            System.out.print("나이: ");
+		            int age = Integer.parseInt(sc.nextLine());
+
+		            System.out.print("키(cm): ");
+		            double height = Double.parseDouble(sc.nextLine());
+
+		            System.out.print("목표 수분 섭취량(ml): ");
+		            int targetWater = Integer.parseInt(sc.nextLine());
+
+		            System.out.print("알레르기(쉼표로 구분, 예: EGGS,MILK / 없으면 엔터): ");
+		            String allergyInput = sc.nextLine().trim();
+
+		            List<Allergy> allergy = new java.util.ArrayList<>();
+		            if (!allergyInput.isEmpty()) {
+		                for (String t : allergyInput.split(",")) {
+		                    String key = t.trim().toUpperCase();
+		                    try {
+		                        allergy.add(Allergy.valueOf(key));
+		                    } catch (IllegalArgumentException e) {
+		                        System.out.println("알 수 없는 알레르기 무시: " + key);
+		                    }
+		                }
+		            }
+
+		            SignUpInfo info = new SignUpInfo(
+		                    newId, newPw,
+		                    currentWeight, targetWeight,
+		                    targetProtein, targetCalories,
+		                    minMeal, age, height,
+		                    targetWater, allergy
+		            );
+		            auth.signUp(info);
+		            break;
+		            case 2: // 로그인
+		                System.out.print("Id 입력 : ");
+		                String userId = sc.nextLine();
+		                System.out.print("password 입력 : ");
+		                String password = sc.nextLine();
+		                user = auth.login(userId, password);
+		                if (user == null) System.out.println("로그인 실패");
+		                break;
+		            case 3:
+		            	System.exit(0);
+		            default:
+		                System.out.println("다시 선택");
+		        }
+		    }
+
+		    System.out.println("로그인 성공");
+		    sc.close();
 		
 	}
 
