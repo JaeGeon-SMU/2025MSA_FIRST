@@ -1,5 +1,7 @@
 package service;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 
 import domain.Food;
 import domain.Labels;
@@ -48,8 +50,12 @@ public class UserService {
 	}
 	*/
 	//통계쪽, 후 개발 필요, 파일 입출력 고민
+
 	void checkWeeklyGoal(User user) {
-		
+		int lastDay = LocalDate.now().lengthOfMonth();
+		// 해당 달의 시작 요일 얻기
+		// 1 : 일요일 2 : 월요일 3: 화요일
+		int startDay = LocalDate.now().getDayOfWeek().getValue();
 	}
 	void checkMonthlyGoal(User user) {
 		
