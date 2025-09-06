@@ -35,15 +35,15 @@ public class SignUpInfo {
         this.allergy = allergy;
     }
 
-    public String getUserId() { return userId; }
-    public String getPassword() { return password; }
-    public double getCurrentWeight() { return currentWeight; }
-    public double getTargetWeight() { return targetWeight; }
-    public int getTargetProtein() { return targetProtein; }
-    public int getTargetCalories() { return targetCalories; }
-    public int getMinMeal() { return minMeal; }
-    public int getAge() { return age; }
-    public double getHeight() { return height; }
-    public int getTargetWater() { return targetWater; }
-    public List<Allergy> getAllergy() { return allergy; }
+    public String getUserId() { return this.userId; }
+    public String getPassword() { return this.password; }
+    public double getCurrentWeight() { return this.currentWeight; }
+    public double getTargetWeight() { return this.targetWeight; }
+    public int getTargetProtein() { return this.targetProtein; }
+    public int getTargetCalories() { return this.targetCalories; }
+    public int getMinMeal() { return this.minMeal; }
+    public int getAge() { return this.age; }
+    public double getHeight() { return this.height; }
+    public int getTargetWater() { return this.targetWater; }
+    public List<Allergy> getAllergy() { return this.allergy; }
 }

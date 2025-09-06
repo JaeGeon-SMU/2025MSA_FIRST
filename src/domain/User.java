@@ -135,7 +135,7 @@ public class User implements Serializable{
 	}
 	
 	public String getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public void setUserId(String userId) {
@@ -143,7 +143,7 @@ public class User implements Serializable{
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
