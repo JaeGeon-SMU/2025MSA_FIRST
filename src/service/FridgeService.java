@@ -10,6 +10,7 @@ import java.util.Queue;
 import java.util.stream.Stream;
 
 import domain.Food;
+import domain.FoodFactory;
 import domain.Fridge;
 import domain.HomeFood;
 import domain.User;
@@ -18,6 +19,7 @@ public class FridgeService {
 	
 	private User user;
 	private Fridge fridge;
+	private FoodFactory foodFactory;
 	
 	
 
@@ -26,34 +28,19 @@ public class FridgeService {
 		this.fridge = user.getFridge();
 	}
 
-//	/*
-//	 * 냉장고에 음식을 넣는 함수
-//	 */
-//	public void putFood(String name, int count) {
-//		
-//		for(int i=0; i<count; i++) {
-//			//개수만큼 음식 추가
-//			fridge.getFoodList().get(name).add(new HomeFood(name));
-//		}
-//				
-//	}
-	
-//	public void putFood(String name, int count) {
-//	    // 1. Check if the Queue for the food name already exists.
-//	    Queue<Food> foodQueue = fridge.getFoodList().get(name);
-//	    
-//	    // 2. If it doesn't exist, create a new one and add it to the HashMap.
-//	    if (foodQueue == null) {
-//	        foodQueue = new LinkedList<>();
-//	        fridge.getFoodList().put(name, foodQueue);
-//	    }
-//	    
-//	    // 3. Now that the Queue is guaranteed to exist, add the new food items.
-//	    for(int i = 0; i < count; i++) {
-//	        foodQueue.add(new HomeFood(name));
-//	    }
-//	}
-	
+
+	/*
+	 * 냉장고에 음식을 넣는 함수
+	 */
+	public void putFood(String name, int count) {
+		
+		for(int i=0; i<count; i++) {
+			//개수만큼 음식 추가
+			fridge.getFoodList().get(name).add(foodFactory.createHomeFood(name));
+		}
+				
+	}
+
 	
 	/*
 	 * 냉장고의 음식 목록을 보여주는 함수
