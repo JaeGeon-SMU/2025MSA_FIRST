@@ -100,6 +100,7 @@ public class User implements Serializable{
 	public double getHeight() {
 		return this.height;
 	}
+
 	public void setHeight(double height) {
 		this.height=height;
 	}
@@ -153,11 +154,13 @@ public class User implements Serializable{
 		return this.passwordSalt;
 	}
 
-	public Map<LocalDate, Map<DailyGoalInfo, List<Food>>> getEatingHistory() {
+	public Map<LocalDate, List<Food>> getEatingHistory() {
 		return this.eatingHistory;
 	}
 
-
+	public Map<LocalDate, DailyGoalInfo> getGoalHistory() {
+		return goalHistory;
+	}
 	
 	
 }
