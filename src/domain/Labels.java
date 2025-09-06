@@ -3,7 +3,7 @@ package domain;
 
 //formatting해서 사용하기 위한 label들
 public enum Labels{
-	AGE("나이 : "),
+	BIRTHYEAR("출생연도 : "),
 	HEIGHT("현재 키 : "),
 	CURRENTWETIGHT("현재 체중 : "),
 	CURRENTWATTERINTAKE("현재 물 섭취량 : "),
