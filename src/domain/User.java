@@ -13,7 +13,7 @@ public class User implements Serializable{
 	private int targetProtein;
 	private int targetCalories;
 	private int minMeal;
-	private int age;
+	private int birthYear;
 	private double height;
 	private int targetWater;
 	private List<Allergy> allergy;
@@ -40,7 +40,7 @@ public class User implements Serializable{
             int targetProtein,
             int targetCalories,
             int minMeal,
-            int age,
+            int birthYear,
             double height,
             int targetWater,
             List<Allergy> allergy) {
@@ -54,7 +54,7 @@ public class User implements Serializable{
     this.targetProtein = targetProtein;
     this.targetCalories = targetCalories;
     this.minMeal = minMeal;
-    this.age = age;
+    this.birthYear = birthYear;
     this.height = height;
     this.targetWater = targetWater;
     this.allergy = allergy;
@@ -96,11 +96,11 @@ public class User implements Serializable{
 	public void setMinMeal(int minMeal) {
 		this.minMeal=minMeal;
 	}
-	public int getAge() {
-		return this.age;
+	public int getBirthYear() {
+		return this.birthYear;
 	}
-	public void setAge(int age) {
-		this.age=age;
+	public void setBirthYear(int birthYear) {
+		this.birthYear=birthYear;
 	}
 	public double getHeight() {
 		return this.height;
