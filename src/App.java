@@ -2,11 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
+import domain.HomeFood;
+import domain.User;
+import domain.dto.SignUpInfo;
+import repo.UserRepo;
+import service.AuthenticationService;
 import domain.Allergy;
 import domain.User;
 import domain.dto.SignUpInfo;
 import service.AuthenticationService;
 import service.UserService;
+
 
 public class App {
 
@@ -131,7 +138,6 @@ public class App {
 		    user.setExerciseCarlories(exerciseCalories);
 		    System.out.println(user.getExerciseCarlories());
 		    sc.close();
-		
 	}
 
 }
