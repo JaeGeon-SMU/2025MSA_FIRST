@@ -7,7 +7,7 @@ import domain.Food;
 
 public class EatingOutFood extends Food {
 	
-	private int price;
+	private int price; //가격
 	
 	public EatingOutFood(String name) {
 		this(name, 0, 0, null, 0);		

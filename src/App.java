@@ -1,12 +1,12 @@
 import java.util.Iterator;
 import java.util.Map;
 
+import domain.HomeFood;
 import domain.User;
 import domain.dto.SignUpInfo;
+import domain.food.homeFood.ChickenBreast;
 import repo.UserRepo;
 import service.AuthenticationService;
-import service.FridgeService;
-import util.SHA256PasswordSecurity;
 
 public class App {
 
@@ -76,7 +76,9 @@ public class App {
 	        // 4) 로그인 실패 케이스
 	        User fail2 = auth.login("test", "1234");
 	        System.out.println("잘못된 비번으로 로그인 성공? " + (fail2 != null));
-		
+
+	        
+	        
 	}
 
 }
