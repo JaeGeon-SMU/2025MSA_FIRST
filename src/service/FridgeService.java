@@ -108,5 +108,27 @@ public class FridgeService {
 	}
 	
 	
+	/*
+	 * 음식 추천 함수
+	 * 알레르기, 칼로리, 단백질 등을 고려하여 해당하는 음식을 출력
+	 */
+	public void recommend() {
+		
+		//알레르기 고려
+		
+		//칼로리 고려
+		user.getTargetCalories();
+		
+		//단백질 고려
+		user.getTargetProtein();
+		
+		//해당하는 음식이 두 개 이상일 시
+		
+		
+		
+		
+	}
+	
+	
 
 }
