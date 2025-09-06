@@ -1,6 +1,7 @@
 package service;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 import domain.Food;
@@ -13,6 +14,7 @@ public class FridgeService {
 	private User user;
 	private Fridge fridge;
 	
+	
 
 	public FridgeService(User user) {
 		this.user = user;
@@ -24,9 +26,9 @@ public class FridgeService {
 	 */
 	public void putFood(String name, int count) {
 		
-		//개수만큼 음식 추가
 		for(int i=0; i<count; i++) {
-			fridge.getFoodList().get(name).add(new HomeFood());
+			//개수만큼 음식 추가
+			fridge.getFoodList().get(name).add(new HomeFood(name));
 		}
 				
 	}
@@ -36,7 +38,15 @@ public class FridgeService {
 	 */
 	public void foodList() {
 		
-		System.out.println(fridge.getFoodList().toString());		
+		if(fridge.getFoodList().isEmpty()) {
+			//냉장고에 음식이 없을 시 출력
+			System.out.println("냉장고가 비어 있습니다.");
+			return;
+		}else {
+			for(Map.Entry<String, Queue<Food>> foods : fridge.getFoodList().entrySet()) {
+				System.out.println("- " + foods.getKey() + "\t 수량: " + foods.getValue().size() + "개 ");
+	        }			
+		}
 		
 	}
 	
@@ -59,9 +69,17 @@ public class FridgeService {
 	 */
 	public void eatFood(String name){
 		
+		Queue<Food> queue = fridge.getFoodList().get(name);
+		
+		if(queue.isEmpty() || queue==null) {
+			//냉장고에 없는 음식을 먹을 시 출력
+			System.out.println("냉장고에 없는 음식입니다.");
+			return;
+		}
+		
 		System.out.println("음식을 먹었습니다.");
 		checkFood(name);
-		fridge.getFoodList().get(name).remove();
+		queue.remove();
 		
 	}
 	
@@ -69,10 +87,24 @@ public class FridgeService {
 	 * 음식 삭제 함수
 	 * 음식을 삭제하면 해당 음식의 수량을 0으로 바꾼다.
 	 */
-	public void deleteFood(String name) {
+	public void deleteFood(String name, int count) {
+		Queue<Food> queue = fridge.getFoodList().get(name);
+		if(queue!=null) {
+			for(int i=0; i<count; i++) {
+				//개수만큼 음식 삭제
+				queue.poll();
+			}
+		}
 		
-		fridge.getFoodList().get(name).clear();
-		
+	}
+	
+	
+	//클래스다이어그램에없는기능
+	/*
+	 * 물 추가 함수
+	 */
+	public void addWater(int count) {
+        fridge.setWaterCnt(fridge.getWaterCnt() + count);
 	}
 	
 	
