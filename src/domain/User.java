@@ -17,7 +17,7 @@ public class User implements Serializable{
 	private double height;
 	private int targetWater;
 	private List<Allergy> allergy;
-	private Map<LocalDate, Food> eatingHistory;
+	private Map<LocalDate, Map<DailyGoalInfo,List<Food>>> eatingHistory;
 	private int exerciseCarlories;
 	private Fridge fridge;
 	private String userId; //로그인 용

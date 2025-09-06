@@ -17,7 +17,5 @@ public class EatingOutFood extends Food {
 		super(name, calorie, protein, allergy);
 		this.price = price;
 	}
-
-	
 	
 }
