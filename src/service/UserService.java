@@ -17,7 +17,7 @@ public class UserService {
 	}
 	//유저 객체 받아서 유저의 water만 꺼내 씀
 	void viewMemberInfo(User user) {
-		of.print(Labels.AGE.getValue() , user.getAge());
+		of.print(Labels.AGE.getValue() , user.getBirthYear());
 		of.print(Labels.HEIGHT.getValue() , user.getHeight());
 		of.print(Labels.CURRENTWETIGHT.getValue() , user.getTargetWeight());
 //		of.print(Labels.CURRENTWATTERINTAKE.getValue() , user.getCurrentWater());
