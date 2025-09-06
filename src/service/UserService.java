@@ -47,6 +47,10 @@ public class UserService {
 		of.print(Labels.TARGETPROTEIN.getValue() , (user.getTargetProtein()-eatedToalProtein );		
 	}
 	*/
+	
+	
+	
+	
 	//통계쪽, 후 개발 필요, 파일 입출력 고민
 	void checkWeeklyGoal(User user) {
 		
