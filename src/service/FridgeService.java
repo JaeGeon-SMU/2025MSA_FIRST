@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import domain.Food;
+import domain.FoodFactory;
 import domain.Fridge;
 import domain.HomeFood;
 import domain.User;
@@ -13,6 +14,7 @@ public class FridgeService {
 	
 	private User user;
 	private Fridge fridge;
+	private FoodFactory foodFactory;
 	
 	
 
@@ -28,7 +30,7 @@ public class FridgeService {
 		
 		for(int i=0; i<count; i++) {
 			//개수만큼 음식 추가
-			fridge.getFoodList().get(name).add(new HomeFood(name));
+			fridge.getFoodList().get(name).add(foodFactory.createHomeFood(name));
 		}
 				
 	}
