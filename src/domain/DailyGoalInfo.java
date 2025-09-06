@@ -8,6 +8,8 @@ public class DailyGoalInfo {
     private int minMeal;
     private double height;
     private int targetWater;
+    private int currentWater; //현재 물 섭취량
+    
 	public double getCurrentWeight() {
 		return currentWeight;
 	}
@@ -37,6 +39,10 @@ public class DailyGoalInfo {
 	}
 	public void setTargetWater(int targetWater) {
 		this.targetWater += targetWater;
+	}
+
+	public int getCurrentWater() {
+		return currentWater;
 	}
 
     
