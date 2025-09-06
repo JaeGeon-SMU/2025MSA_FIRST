@@ -147,6 +147,9 @@ public class UserSwitch {
 						}
 					}
 					break;
+				case 10:
+					flag=false;
+					System.out.println("이전 메뉴로 도아가기");
 			}
 		}
 		while(flag);
