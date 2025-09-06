@@ -94,6 +94,7 @@ public class UserService {
 			// 조건부 마크 입력
 			//if()
 		}
+		System.out.println();
 	}
 	public void checkMonthlyGoal(User user) {
 		int lastDay = LocalDate.now().lengthOfMonth();
@@ -101,11 +102,12 @@ public class UserService {
 		// 1 : 일요일 2 : 월요일 3: 화요일
 		// 해당 달의 첫 번째 일. 의 요일 정보 얻기();
 		int startDay = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 1).getDayOfWeek().getValue();
-		System.out.println(LocalDate.now().getYear() + "년" + LocalDate.now().getMonthValue() + "월 \n");
+		System.out.println(LocalDate.now().getYear() + "년" + LocalDate.now().getMonthValue() + "월");
 		System.out.println("일\t월\t화\t수\t목\t금\t토");
 		int currentDay = 1;
-		for(int i = 0; i <= 42 ; i++) {
-			if(i < startDay) {
+		for(int i = 0; i < 45 ; i++) {
+			// startDay = 월요일부터 시작, 우리 달력은 일요일 부터 시작이라 +1해서 첫 시작을 한 칸 더 계산해줘야함
+			if(i < startDay+1) {
 				System.out.print("\t");
 			}else {
 				System.out.printf("%02d\t", currentDay);
