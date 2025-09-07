@@ -58,6 +58,7 @@ public class User implements Serializable{
     this.exerciseCarlories = 0;
     this.fridge = new Fridge();
     this.eatingHistory = new HashMap<>();
+    this.goalHistory = new HashMap<>();
 }
 	
 	//getter setter
@@ -132,18 +133,6 @@ public class User implements Serializable{
 	
 	public String getUserId() {
 		return this.userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getPassword() {
-		return this.password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getPasswordHash() {

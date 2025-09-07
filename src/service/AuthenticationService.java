@@ -57,4 +57,8 @@ public class AuthenticationService {
 	      userRepo.save(user);
 	      System.out.println("회원가입 완료: " + signUpInfo.getUserId());
     }
+	
+	public User findById(String id) {
+        return userRepo.findById(id);
+    }
 }
