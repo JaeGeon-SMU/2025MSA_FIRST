@@ -232,12 +232,54 @@ public class FridgeService {
 	    }
 	}
 	
-		// 힙 정렬 구현
-		private List<HomeFood> heapSort(List<HomeFood> foods) {
-			List<HomeFood> heapList = new ArrayList<>();
-			//미완입니다.
-			return heapList;
-		}
+	// 힙 정렬 구현 (칼로리 기준, 오름차순)
+	private List<HomeFood> heapSort(List<HomeFood> foods) {
+	    int n = foods.size();
+
+	    // 1. 최대 힙 만들기
+	    for (int i = n / 2 - 1; i >= 0; i--) {
+	        heapify(foods, n, i);
+	    }
+
+	    // 2. 루트(가장 큰 값)와 마지막 원소 교환 + 힙 크기 줄이기
+	    for (int i = n - 1; i >= 1; i--) {
+	        // 루트와 마지막 원소 교환
+	        HomeFood temp = foods.get(0);
+	        foods.set(0, foods.get(i));
+	        foods.set(i, temp);
+
+	        // 힙 속성 유지
+	        heapify(foods, i, 0); // i는 힙 크기
+	    }
+
+	    return foods;
+	}
+
+	// 힙 속성을 유지하는 함수
+	private void heapify(List<HomeFood> foods, int n, int i) {
+	    int largest = i; // 루트를 가장 큰 값으로 가정
+	    int left = 2 * i + 1; // 왼쪽 자식
+	    int right = 2 * i + 2; // 오른쪽 자식
+
+	    // 왼쪽 자식이 존재하고 루트보다 작으면
+	    if (left < n && foods.get(left).getCalorie() < foods.get(largest).getCalorie()) {
+	        largest = left;
+	    }
+
+	    // 오른쪽 자식이 존재하고 largest보다 작으면
+	    if (right < n && foods.get(right).getCalorie() < foods.get(largest).getCalorie()) {
+	        largest = right;
+	    }
+
+	    // largest가 루트와 다르면 swap 후 재귀적으로 heapify
+	    if (largest != i) {
+	        HomeFood swap = foods.get(i);
+	        foods.set(i, foods.get(largest));
+	        foods.set(largest, swap);
+
+	        heapify(foods, n, largest);
+	    }
+	}
 	
 	
 	/*
