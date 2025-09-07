@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import domain.Allergy;
 import domain.User;
 import domain.dto.SignUpInfo;
+import domain.enums.Allergy;
 import service.AuthenticationService;
 import service.UserService;
 

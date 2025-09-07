@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+import domain.DailyGoalInfo;
 import domain.User;
 import service.UserService;
 
@@ -15,17 +16,21 @@ public class MainAfterLoginMenu {
     }
 
     public void run() {
-        // 로그인 직후 알림 등
         userService.notifyEmergencyDay(user);
+
+        // 오늘 기록 보장(유지하고 싶으면 남기고, 불필요하면 제거 가능)
+        user.ensureTodayInfo();
+        userService.saveUser(user);
 
         while (true) {
             System.out.println();
             System.out.println("==== 메인 메뉴 ====");
             System.out.println("1. 유저 정보 수정");
             System.out.println("2. 오늘 운동 칼로리 입력");
-            System.out.println("3. 냉장고 관리 (예정)");
-            System.out.println("4. 통계 보기 (예정)");
-            System.out.println("5. 로그아웃 / 종료");
+            System.out.println("3. 회원 정보 보기");            // ★ 추가
+            System.out.println("4. 냉장고 관리 (예정)");
+            System.out.println("5. 통계 보기 (예정)");
+            System.out.println("6. 로그아웃 / 종료");
             System.out.print("선택: ");
 
             String in = sc.nextLine().trim();
@@ -40,27 +45,31 @@ public class MainAfterLoginMenu {
             switch (sel) {
                 case 1: {
                     UserProfileMenu profile = new UserProfileMenu(user, userService, sc);
-                    profile.run(); // 돌아오면 메인 메뉴로 복귀
+                    profile.run();
                     break;
                 }
                 case 2: {
                     inputExerciseCalories();
                     break;
                 }
-                case 3: {
-                    System.out.println("냉장고 관리는 추후 구현 예정입니다.");
+                case 3: { // ★ 회원 정보 보기
+                    userService.viewMemberInfo(user);
                     break;
                 }
                 case 4: {
-                    System.out.println("통계 보기는 추후 구현 예정입니다.");
+                    System.out.println("냉장고 관리는 추후 구현 예정입니다.");
                     break;
                 }
                 case 5: {
+                    System.out.println("통계 보기는 추후 구현 예정입니다.");
+                    break;
+                }
+                case 6: {
                     System.out.println("로그아웃합니다. 안녕!");
                     return;
                 }
                 default: {
-                    System.out.println("1~5 중에서 선택하세요.");
+                    System.out.println("1~6 중에서 선택하세요.");
                     break;
                 }
             }
