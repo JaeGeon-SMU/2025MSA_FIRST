@@ -2,7 +2,9 @@ package service;
 
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.List;
 
+import domain.DailyGoalInfo;
 import domain.Food;
 import domain.Labels;
 import domain.OutFormat;
@@ -25,7 +27,11 @@ public class UserService {
 	}
 	//전날 푸드 list 갯수 체크해서 알람, user에 객체 없음
 	public void notifyEmergencyDay(User user) {
-
+		List<Food> yesterdayFoodList = user.getEatingHistory().getOrDefault(LocalDate.now().minusDays(1), null);
+		DailyGoalInfo yesterdayGoal = user.getGoalHistory().getOrDefault(LocalDate.now().minusDays(1), null);
+		if(yesterdayFoodList != null && yesterdayFoodList.size() <yesterdayGoal.getMinMeal()) {
+			System.out.println("====오늘은 비상데이 입니다=====");
+		}
 	}
 	/*
 	//목표 칼로리 - 현재 섭취량(for문 합산 , List<Food>) 
