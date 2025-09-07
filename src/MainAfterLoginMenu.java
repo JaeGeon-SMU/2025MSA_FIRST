@@ -27,7 +27,7 @@ public class MainAfterLoginMenu {
             System.out.println("==== 메인 메뉴 ====");
             System.out.println("1. 유저 정보 수정");
             System.out.println("2. 오늘 운동 칼로리 입력");
-            System.out.println("3. 회원 정보 보기");            // ★ 추가
+            System.out.println("3. 회원 정보 보기");
             System.out.println("4. 냉장고 관리 (예정)");
             System.out.println("5. 통계 보기 (예정)");
             System.out.println("6. 로그아웃 / 종료");
@@ -52,7 +52,7 @@ public class MainAfterLoginMenu {
                     inputExerciseCalories();
                     break;
                 }
-                case 3: { // ★ 회원 정보 보기
+                case 3: {
                     userService.viewMemberInfo(user);
                     break;
                 }
@@ -86,18 +86,16 @@ public class MainAfterLoginMenu {
             String input = sc.nextLine().trim();
             try {
                 int exerciseCalories = Integer.parseInt(input);
-                if (exerciseCalories < 0) {
-                    System.out.println("0 이상의 정수를 입력하세요.");
-                    continue;
-                }
 
-                user.setExerciseCarlories(exerciseCalories);
-                userService.saveUser(user); // 저장
+                // ⬇⬇⬇ 서비스로 위임 ⬇⬇⬇
+                userService.updateExerciseCalories(user, exerciseCalories);
 
                 System.out.println("운동 칼로리 저장 완료! 현재 값: " + user.getExerciseCarlories());
                 return;
             } catch (NumberFormatException e) {
                 System.out.println("숫자만 입력하세요.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
