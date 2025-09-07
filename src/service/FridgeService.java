@@ -232,7 +232,7 @@ public class FridgeService {
 	    }
 	}
 	
-	// 힙 정렬 구현 (칼로리 기준, 내림차순)
+	// 힙 정렬 구현 (칼로리 기준, 오름차순)
 	private List<HomeFood> heapSort(List<HomeFood> foods) {
 	    int n = foods.size();
 
@@ -261,12 +261,12 @@ public class FridgeService {
 	    int left = 2 * i + 1; // 왼쪽 자식
 	    int right = 2 * i + 2; // 오른쪽 자식
 
-	    // 왼쪽 자식이 존재하고 루트보다 크면
+	    // 왼쪽 자식이 존재하고 루트보다 작으면
 	    if (left < n && foods.get(left).getCalorie() < foods.get(largest).getCalorie()) {
 	        largest = left;
 	    }
 
-	    // 오른쪽 자식이 존재하고 largest보다 크면
+	    // 오른쪽 자식이 존재하고 largest보다 작으면
 	    if (right < n && foods.get(right).getCalorie() < foods.get(largest).getCalorie()) {
 	        largest = right;
 	    }
