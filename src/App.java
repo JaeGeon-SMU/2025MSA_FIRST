@@ -42,6 +42,7 @@ public class App {
 	                    System.out.println("숫자를 입력하세요.");
 	                }
 	            }
+	        
 
 	            switch (num) {
 	                case 1: { // 회원가입
@@ -117,6 +118,7 @@ public class App {
 	        }
 
 	        System.out.println("로그인 성공");
+	        userService.notifyEmergencyDay(user); //비상데이 알림
 	        System.out.println("오늘의 운동 칼로리를 입력해주세요");
 	        
 	        int exerciseCalories;
