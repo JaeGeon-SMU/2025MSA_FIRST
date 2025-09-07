@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserSwitch {
@@ -120,19 +122,29 @@ public class UserSwitch {
 					}
 					break;
 				case 8: 
-//					System.out.println("알러지 종류를 입력해주세요: ");
-//					while (true) {
-//						String inputLine = sc.nextLine();
-//						try {
-//							타입 알러지 = 타입.parse타입(inputLine);
-//							user.??????
-//							System.out.println("입력하신 알러지가 등록되었습니다.");
-//							break;
-//						} catch (예외 e) {
-//							System.out.println("알맞은 형식이 아닙니다 법정 알러지 종류로 입력해주세요.");
-//						}
-//					}
+					while (true) {
+					System.out.print("알레르기(쉼표로 구분, 예: EGGS,MILK / 없으면 엔터): ");
+                    String allergyInput = sc.nextLine().trim();
+
+                    List<Allergy> allergy = new ArrayList<>();
+                    try {
+                    	if (!allergyInput.isEmpty()) {
+                            for (String t : allergyInput.split(",")) {
+                                String key = t.trim().toUpperCase();
+                                try {
+                                    allergy.add(Allergy.valueOf(key));
+                                } catch (IllegalArgumentException e) {
+                                    System.out.println("알 수 없는 알레르기 무시: " + key);
+                                }
+                            }
+                        }	
+						break;
+					} catch (NumberFormatException e) {
+						System.out.println("알맞은 형식이 아닙니다. 소숫점을 제외하고 다시 입력해 주세요");
+					}
+                    
 					break;	
+					}
 				case 9:
 					System.out.println("출생년도를 입력해주세요 ex)2025 : ");
 					while (true) {

@@ -28,12 +28,21 @@ public class UserRepo {
 
 	        userRepo.put(user.getUserId(), user);
 
-	        try (ObjectOutputStream oos = new ObjectOutputStream(
-	                new BufferedOutputStream(new FileOutputStream(DB_FILE)))) {
-	            oos.writeObject(userRepo);
+	        try {
+	            // 상위 디렉토리 생성
+	            File file = new File(DB_FILE);
+	            File parentDir = file.getParentFile();
+	            if (parentDir != null && !parentDir.exists()) {
+	                parentDir.mkdirs();
+	            }
+
+	            try (ObjectOutputStream oos = new ObjectOutputStream(
+	                    new BufferedOutputStream(new FileOutputStream(file)))) {
+	                oos.writeObject(userRepo);
+	            }
 	        } catch (IOException e) {
 	            e.printStackTrace();
-	        }     
+	        }
 	}
 
 	public Map<String, User> loadAll() {

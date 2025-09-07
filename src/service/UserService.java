@@ -9,13 +9,15 @@ import domain.Food;
 import domain.Labels;
 import domain.OutFormat;
 import domain.User;
+import repo.UserRepo;
 
 
 
 public class UserService {
 	OutFormat of = new OutFormat();
+	private final UserRepo userRepo = new UserRepo();
 	
-	//유저 객체 받아서 유저의 water만 꺼내 씀
+	//유저 객체 받아서 유저의 정보 출력
 	public void viewMemberInfo(User user) {
 		of.print(Labels.BIRTHYEAR.getValue() , user.getBirthYear());
 		of.print(Labels.HEIGHT.getValue() , user.getHeight());
@@ -25,7 +27,8 @@ public class UserService {
 		of.print(Labels.TARGETPROTEIN.getValue(), user.getTargetProtein());
 		of.print(Labels.TARGETCALORIES.getValue(), user.getTargetCalories());
 	}
-	//전날 푸드 list 갯수 체크해서 알람, user에 객체 없음
+	
+	//전날 최소 먹어야 하는 끼니보다 적게 먹은 경우 비상데이 알림
 	public void notifyEmergencyDay(User user) {
 		List<Food> yesterdayFoodList = user.getEatingHistory().getOrDefault(LocalDate.now().minusDays(1), null);
 		DailyGoalInfo yesterdayGoal = user.getGoalHistory().getOrDefault(LocalDate.now().minusDays(1), null);
@@ -126,4 +129,8 @@ public class UserService {
 			}
 		}
 	}
+	
+	 public void saveUser(User user) {
+	        userRepo.save(user);
+	    }
 }
