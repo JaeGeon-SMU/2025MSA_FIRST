@@ -30,7 +30,7 @@ public class AuthMenu {
                 User user = login();
                 if (user != null) {
                     System.out.println("로그인 성공");
-                    userService.notifyEmergencyDay(user); // 필요 시 제거 가능
+                    userService.notifyEmergencyDay(user);
                     return user;
                 } else {
                     System.out.println("로그인 실패");
@@ -59,57 +59,63 @@ public class AuthMenu {
     }
 
     private void signUp() {
-        System.out.print("Id 입력 : ");
-        String newId = sc.nextLine().trim();
+        try {
+            System.out.print("Id 입력 : ");
+            String newId = sc.nextLine().trim();
 
-        System.out.print("password 입력 : ");
-        String newPw = sc.nextLine();
+            System.out.print("password 입력 : ");
+            String newPw = sc.nextLine();
 
-        System.out.print("현재 체중(kg): ");
-        double currentWeight = Double.parseDouble(sc.nextLine());
+            System.out.print("현재 체중(kg): ");
+            double currentWeight = Double.parseDouble(sc.nextLine());
 
-        System.out.print("목표 체중(kg): ");
-        double targetWeight = Double.parseDouble(sc.nextLine());
+            System.out.print("목표 체중(kg): ");
+            double targetWeight = Double.parseDouble(sc.nextLine());
 
-        System.out.print("목표 단백질(g): ");
-        int targetProtein = Integer.parseInt(sc.nextLine());
+            System.out.print("목표 단백질(g): ");
+            int targetProtein = Integer.parseInt(sc.nextLine());
 
-        System.out.print("목표 칼로리(kcal): ");
-        int targetCalories = Integer.parseInt(sc.nextLine());
+            System.out.print("목표 칼로리(kcal): ");
+            int targetCalories = Integer.parseInt(sc.nextLine());
 
-        System.out.print("최소 끼니 수: ");
-        int minMeal = Integer.parseInt(sc.nextLine());
+            System.out.print("최소 끼니 수: ");
+            int minMeal = Integer.parseInt(sc.nextLine());
 
-        System.out.print("나이: ");
-        int age = Integer.parseInt(sc.nextLine());
+            System.out.print("나이: ");
+            int age = Integer.parseInt(sc.nextLine());
 
-        System.out.print("키(cm): ");
-        double height = Double.parseDouble(sc.nextLine());
+            System.out.print("키(cm): ");
+            double height = Double.parseDouble(sc.nextLine());
 
-        System.out.print("목표 수분 섭취량(ml): ");
-        int targetWater = Integer.parseInt(sc.nextLine());
+            System.out.print("목표 수분 섭취량(ml): ");
+            int targetWater = Integer.parseInt(sc.nextLine());
 
-        System.out.print("알레르기(쉼표, 예: EGGS,MILK / 없으면 엔터): ");
-        String allergyInput = sc.nextLine().trim();
+            System.out.print("알레르기(쉼표, 예: EGGS,MILK / 없으면 엔터): ");
+            String allergyInput = sc.nextLine().trim();
 
-        List<Allergy> allergy = new ArrayList<>();
-        if (!allergyInput.isEmpty()) {
-            for (String t : allergyInput.split(",")) {
-                String key = t.trim().toUpperCase();
-                try {
-                    allergy.add(Allergy.valueOf(key));
-                } catch (IllegalArgumentException e) {
-                    System.out.println("알 수 없는 알레르기 무시: " + key);
+            List<Allergy> allergy = new ArrayList<>();
+            if (!allergyInput.isEmpty()) {
+                for (String t : allergyInput.split(",")) {
+                    String key = t.trim().toUpperCase();
+                    try {
+                        allergy.add(Allergy.valueOf(key));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("알 수 없는 알레르기 무시: " + key);
+                    }
                 }
             }
-        }
 
-        SignUpInfo info = new SignUpInfo(
-                newId, newPw, currentWeight, targetWeight,
-                targetProtein, targetCalories, minMeal, age, height,
-                targetWater, allergy
-        );
-        auth.signUp(info);
+            SignUpInfo info = new SignUpInfo(
+                    newId, newPw, currentWeight, targetWeight,
+                    targetProtein, targetCalories, minMeal, age, height,
+                    targetWater, allergy
+            );
+            auth.signUp(info);
+        } catch (NumberFormatException e) {
+            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private User login() {
@@ -118,16 +124,12 @@ public class AuthMenu {
         System.out.print("password 입력 : ");
         String password = sc.nextLine();
 
-        // 로그인 로직: AuthenticationService에서 null 반환 시 직접 구분
         User user = auth.login(userId, password);
-
         if (user == null) {
-            // 여기서 왜 null인지 구체적으로 구분
             if (auth.findById(userId) == null) {
-                // UserRepo 같은 데서 확인하는 findById 사용
                 System.out.println("해당하는 유저가 없습니다.");
             } else {
-                System.out.println("유저 정보가 일치하지 않습니다.");
+                System.out.println("비밀번호가 일치하지 않습니다.");
             }
         }
         return user;

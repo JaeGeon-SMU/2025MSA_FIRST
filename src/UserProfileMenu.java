@@ -10,10 +10,10 @@ import service.UserService;
 public class UserProfileMenu {
     private final User user;
     private final Scanner sc;
-    private final UserService userService; // null 가능
+    private final UserService userService;
 
     public UserProfileMenu(User user, Scanner sc) {
-        this(user, null, sc);
+        this(user, new UserService(), sc);
     }
 
     public UserProfileMenu(User user, UserService userService, Scanner sc) {
@@ -27,38 +27,18 @@ public class UserProfileMenu {
             printMenu();
             int sel = readMenuSelection(1, 10);
             switch (sel) {
-                case 1:
-                    setCurrentWeight();
-                    break;
-                case 2:
-                    setTargetWeight();
-                    break;
-                case 3:
-                    setTargetProtein();
-                    break;
-                case 4:
-                    setTargetCalories();
-                    break;
-                case 5:
-                    setMinMeal();
-                    break;
-                case 6:
-                    setHeight();
-                    break;
-                case 7:
-                    setTargetWater();
-                    break;
-                case 8:
-                    setAllergy();
-                    break;
-                case 9:
-                    setBirthYear();
-                    break;
+                case 1: setCurrentWeight(); break;
+                case 2: setTargetWeight(); break;
+                case 3: setTargetProtein(); break;
+                case 4: setTargetCalories(); break;
+                case 5: setMinMeal(); break;
+                case 6: setHeight(); break;
+                case 7: setTargetWater(); break;
+                case 8: setAllergy(); break;
+                case 9: setBirthYear(); break;
                 case 10:
-                    if (userService != null) {
-                        userService.saveUser(user);
-                        System.out.println("변경사항을 저장했습니다.");
-                    }
+                    userService.saveUser(user);
+                    System.out.println("변경사항을 저장했습니다.");
                     System.out.println("이전 메뉴로 돌아갑니다.");
                     return;
                 default:
@@ -85,57 +65,85 @@ public class UserProfileMenu {
         System.out.print("선택: ");
     }
 
+    // ================= 입력 → 서비스 호출 =================
+
     private void setCurrentWeight() {
         double v = readDoubleLoop("현재 체중을 입력하세요 (예: 72.5): ");
-        user.setCurrentWeight(v);
-        System.out.println("현재 체중이 저장되었습니다.");
+        try {
+            userService.updateCurrentWeight(user, v);
+            System.out.println("현재 체중이 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setTargetWeight() {
         double v = readDoubleLoop("목표 체중을 입력하세요 (예: 68.0): ");
-        user.setTargetWeight(v);
-        System.out.println("목표 체중이 저장되었습니다.");
+        try {
+            userService.updateTargetWeight(user, v);
+            System.out.println("목표 체중이 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setTargetProtein() {
         int v = readIntLoop("목표 단백질(g, 정수)을 입력하세요: ");
-        user.setTargetProtein(v);
-        System.out.println("목표 단백질이 저장되었습니다.");
+        try {
+            userService.updateTargetProtein(user, v);
+            System.out.println("목표 단백질이 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setTargetCalories() {
         int v = readIntLoop("목표 칼로리(kcal, 정수)를 입력하세요: ");
-        user.setTargetCalories(v);
-        System.out.println("목표 칼로리가 저장되었습니다.");
+        try {
+            userService.updateTargetCalories(user, v);
+            System.out.println("목표 칼로리가 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setMinMeal() {
         int v = readIntLoop("최소 끼니 수(정수)를 입력하세요: ");
-        user.setMinMeal(v);
-        System.out.println("최소 끼니 수가 저장되었습니다.");
+        try {
+            userService.updateMinMeal(user, v);
+            System.out.println("최소 끼니 수가 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setHeight() {
         double v = readDoubleLoop("키(cm)를 입력하세요 (예: 175.3): ");
-        user.setHeight(v);
-        System.out.println("키가 저장되었습니다.");
+        try {
+            userService.updateHeight(user, v);
+            System.out.println("키가 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setTargetWater() {
         int v = readIntLoop("목표 수분 섭취량(ml, 정수)을 입력하세요: ");
-        user.setTargetWater(v);
-        System.out.println("목표 수분 섭취량이 저장되었습니다.");
+        try {
+            userService.updateTargetWater(user, v);
+            System.out.println("목표 수분 섭취량이 저장되었습니다.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void setAllergy() {
         while (true) {
             System.out.print("알레르기(쉼표로 구분, 예: EGGS,MILK / 없으면 엔터): ");
             String s = sc.nextLine().trim();
-
-            List<Allergy> list = new ArrayList<Allergy>();
+            List<Allergy> list = new ArrayList<>();
             if (!s.isEmpty()) {
-                String[] parts = s.split(",");
-                for (String p : parts) {
+                for (String p : s.split(",")) {
                     String key = p.trim().toUpperCase();
                     try {
                         list.add(Allergy.valueOf(key));
@@ -148,7 +156,7 @@ public class UserProfileMenu {
                     continue;
                 }
             }
-            user.setAllergy(list);
+            userService.updateAllergy(user, list);
             System.out.println("알레르기 정보가 저장되었습니다.");
             return;
         }
@@ -158,13 +166,13 @@ public class UserProfileMenu {
         int now = Year.now().getValue();
         while (true) {
             int y = readIntLoop("출생년도(예: 1995)를 입력하세요: ");
-            if (y < 1900 || y > now) {
+            try {
+                userService.updateBirthYear(user, y);
+                System.out.println("출생년도가 저장되었습니다.");
+                return;
+            } catch (IllegalArgumentException e) {
                 System.out.printf("1900~%d 사이의 연도를 입력하세요.%n", now);
-                continue;
             }
-            user.setBirthYear(y);
-            System.out.println("출생년도가 저장되었습니다.");
-            return;
         }
     }
 
