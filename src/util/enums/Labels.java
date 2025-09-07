@@ -1,4 +1,4 @@
-package domain;
+package util.enums;
 
 
 //formatting해서 사용하기 위한 label들
@@ -12,6 +12,9 @@ public enum Labels{
 	TARGETPROTEIN("목표 단백질 섭취량 : "),
 	TARGETCALORIES("목표 칼로리 섭취량 : "),
 	CHECKCALORIES("오늘 목표로 해야 할 칼로리 섭취량 : "),
+	CHECKEXERCISECALORIES("오늘 소모한 칼로리 : "),
+	MINMEAL("최소 끼니 수 : "),
+    ALLERGIES("알레르기 : "),
 	CHECKPROTEIN("오늘 목표로 해야 할 단백질 섭취량 : ");
 	
 	

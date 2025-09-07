@@ -6,10 +6,10 @@ import java.util.List;
 
 import domain.DailyGoalInfo;
 import domain.Food;
-import domain.Labels;
-import domain.OutFormat;
 import domain.User;
 import repo.UserRepo;
+import util.OutFormat;
+import util.enums.Labels;
 
 
 
@@ -19,13 +19,18 @@ public class UserService {
 	
 	//유저 객체 받아서 유저의 정보 출력
 	public void viewMemberInfo(User user) {
-		of.print(Labels.BIRTHYEAR.getValue() , user.getBirthYear());
-		of.print(Labels.HEIGHT.getValue() , user.getHeight());
-		of.print(Labels.CURRENTWETIGHT.getValue() , user.getTargetWeight());
-		of.print(Labels.CURRENTWATTERINTAKE.getValue(), user.getGoalHistory().get(LocalDate.now()).getCurrentWater());
-		of.print(Labels.TARGETWATER.getValue(), user.getTargetWater());
-		of.print(Labels.TARGETPROTEIN.getValue(), user.getTargetProtein());
-		of.print(Labels.TARGETCALORIES.getValue(), user.getTargetCalories());
+	    of.print(Labels.BIRTHYEAR.getValue(),               user.getBirthYear());
+	    of.print(Labels.HEIGHT.getValue(),                  String.format("%.1f cm", user.getHeight()));
+	    of.print(Labels.CURRENTWETIGHT.getValue(),          String.format("%.1f kg", user.getCurrentWeight()));
+	    of.print(Labels.TARGETWEIGHT.getValue(),            String.format("%.1f kg", user.getTargetWeight()));
+	    of.print(Labels.CURRENTWATTERINTAKE.getValue(),     user.ensureTodayInfo().getCurrentWater() + " ml");   // ← 오늘 물 섭취량
+	    of.print(Labels.TARGETWATER.getValue(),             user.getTargetWater() + " ml");
+	    of.print(Labels.TARGETPROTEIN.getValue(),           user.getTargetProtein() + " g");
+	    of.print(Labels.TARGETCALORIES.getValue(),          user.getTargetCalories() + " kcal");
+	    of.print(Labels.MINMEAL.getValue(),                 user.getMinMeal());
+	    of.print(Labels.CHECKEXERCISECALORIES.getValue(),   user.getExerciseCarlories() + " kcal");
+	    String allergies = (user.getAllergy() == null || user.getAllergy().isEmpty()) ? "없음" : user.getAllergy().toString();
+	    of.print(Labels.ALLERGIES.getValue(),               allergies);
 	}
 	
 	//전날 최소 먹어야 하는 끼니보다 적게 먹은 경우 비상데이 알림

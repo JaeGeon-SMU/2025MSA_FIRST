@@ -3,8 +3,8 @@ package domain.food.eatingOutFood;
 import java.time.LocalDate;
 import java.util.List;
 
-import domain.Allergy;
 import domain.EatingOutFood;
+import domain.enums.Allergy;
 
 public class FriedChicken extends EatingOutFood{
 	

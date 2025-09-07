@@ -2,9 +2,9 @@ package service;
 
 import java.util.List;
 
-import domain.Allergy;
 import domain.User;
 import domain.dto.SignUpInfo;
+import domain.enums.Allergy;
 import repo.UserRepo;
 import util.SHA256PasswordSecurity;
 

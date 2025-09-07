@@ -6,9 +6,9 @@ import java.util.Scanner;
 import domain.HomeFood;
 import domain.User;
 import domain.dto.SignUpInfo;
+import domain.enums.Allergy;
 import repo.UserRepo;
 import service.AuthenticationService;
-import domain.Allergy;
 import domain.User;
 import domain.dto.SignUpInfo;
 import service.AuthenticationService;
@@ -29,6 +29,16 @@ public class App {
                 System.out.println("프로그램 종료");
                 return;
             }
+            /*
+             * 
+             * 
+             * 
+             * 
+             * 물먹는거 만드셈
+             * 
+             * 
+             * 
+             */
 
             // 로그인 성공 후 메인 메뉴로 이동
             MainAfterLoginMenu mainMenu = new MainAfterLoginMenu(user, userService, sc);

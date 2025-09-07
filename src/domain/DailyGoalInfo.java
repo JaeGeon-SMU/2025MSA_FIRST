@@ -1,49 +1,54 @@
 package domain;
 
-public class DailyGoalInfo {
-	private double currentWeight;
-	private double targetWeight;
-	private int targetProtein;
+import java.io.Serializable;
+
+public class DailyGoalInfo implements Serializable {
+
+    private double currentWeight;
+    private double targetWeight;
+    private int targetProtein;
     private int targetCalories;
     private int minMeal;
     private double height;
     private int targetWater;
-    private int currentWater; //현재 물 섭취량
-    
-	public double getCurrentWeight() {
-		return currentWeight;
-	}
+    private int currentWater;
 
-	public double getTargetWeight() {
-		return targetWeight;
-	}
-	
-	public int getTargetProtein() {
-		return targetProtein;
-	}
+    public DailyGoalInfo() {}
 
-	public int getTargetCalories() {
-		return targetCalories;
-	}
-	
-	public int getMinMeal() {
-		return minMeal;
-	}
+    public DailyGoalInfo(User u) {
+        this.currentWeight = u.getCurrentWeight();
+        this.targetWeight  = u.getTargetWeight();
+        this.targetProtein = u.getTargetProtein();
+        this.targetCalories= u.getTargetCalories();
+        this.minMeal       = u.getMinMeal();
+        this.height        = u.getHeight();
+        this.targetWater   = u.getTargetWater();
+        this.currentWater  = 0;
+    }
 
-	public double getHeight() {
-		return height;
-	}
+    // getters/setters …
+    public double getCurrentWeight() { return currentWeight; }
+    public void setCurrentWeight(double v) { this.currentWeight = v; }
 
-	public int getTargetWater() {
-		return targetWater;
-	}
-	public void setTargetWater(int targetWater) {
-		this.targetWater += targetWater;
-	}
+    public double getTargetWeight() { return targetWeight; }
+    public void setTargetWeight(double v) { this.targetWeight = v; }
 
-	public int getCurrentWater() {
-		return currentWater;
-	}
+    public int getTargetProtein() { return targetProtein; }
+    public void setTargetProtein(int v) { this.targetProtein = v; }
 
-    
+    public int getTargetCalories() { return targetCalories; }
+    public void setTargetCalories(int v) { this.targetCalories = v; }
+
+    public int getMinMeal() { return minMeal; }
+    public void setMinMeal(int v) { this.minMeal = v; }
+
+    public double getHeight() { return height; }
+    public void setHeight(double v) { this.height = v; }
+
+    public int getTargetWater() { return targetWater; }
+    public void setTargetWater(int v) { this.targetWater = v; } // ← 누적 아님: 설정
+
+    public int getCurrentWater() { return currentWater; }
+    public void addCurrentWater(int ml) { this.currentWater += ml; }
+    public void setCurrentWater(int ml) { this.currentWater = ml; }
 }
