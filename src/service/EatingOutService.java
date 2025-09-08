@@ -4,14 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import domain.EatingOutFood;
 import domain.Food;
 import domain.FoodFactory;
-import domain.HomeFood;
 import domain.User;
 
 public class EatingOutService extends recommendTemplate{
@@ -109,9 +108,20 @@ public class EatingOutService extends recommendTemplate{
 		
 		//상위 후보 출력
 		int limit = 3; //출력할 음식 후보 개수
+		/*
 		for(int i=0; i<Math.min(limit, foodCandidates.size()); i++) {
 			EatingOutFood eatingOutFood = foodCandidates.get(i);
 			System.out.println((i+1) + " " + eatingOutFood.toString());
+		}
+		*/
+		HashSet<Integer> foodNumList = new HashSet<>();
+		while(foodNumList.size()<Math.min(limit, foodCandidates.size())) {
+			foodNumList.add((int)(Math.random()*foodCandidates.size()));
+		}
+		for(int foodNum : foodNumList) {
+			int cnt=1;
+			EatingOutFood eatingOutFood = foodCandidates.get(foodNum);
+			System.out.println((cnt++) + " " + eatingOutFood.toString());
 		}
 		
 	}
