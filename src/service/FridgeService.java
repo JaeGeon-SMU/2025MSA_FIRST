@@ -215,7 +215,7 @@ public class FridgeService {
 	
 	
 	/*
-	 * 냉장고 음식의 목록을 칼로리가 높은순으로 정렬해서 리턴하는 함수
+	 * 냉장고 음식의 목록을 칼로리가 높은순으로 힙 정렬해서 리턴하는 함수
 	 */
 	public void sortCalorieFoodList() {
 	    // 냉장고에 음식이 없으면 메시지 출력
@@ -473,6 +473,9 @@ public class FridgeService {
 		return score;		
 	}
 	
+	/*
+	 * 물 먹는 함수
+	 */
 	public void spendWater(int ml) {
 		int waterCnt = fridge.getWaterCnt();
 		if(waterCnt<1) {
@@ -481,6 +484,36 @@ public class FridgeService {
 			fridge.setWaterCnt(waterCnt-1);
 			user.getGoalHistory().get(LocalDate.now()).addCurrentWater(500);
 		}
+	}
+	
+	/*
+	 * 최소수량을 설정하는 함수
+	 */
+	public void setReorderPoint(String foodName, int reorderPoint) {
+	    HomeFood food = findHomeFood(foodName);
+	    if (food == null) {
+	        throw new IllegalArgumentException(foodName + "을(를) 찾을 수 없습니다.");
+	    }
+	    food.setReorderPoint(reorderPoint);
+	    if (reorderPoint > 0) {
+	        System.out.println(foodName + "의 최소 수량 알림이 " + reorderPoint + "개로 설정되었습니다.");
+	    } else {
+	        System.out.println(foodName + "의 최소 수량 알림이 해제되었습니다.");
+	    }
+	}
+
+	/*
+	 *  최소수량 찾을 때 HomeFood 객체를 찾는 내부 헬퍼 메서드
+	 */
+	private HomeFood findHomeFood(String foodName) {
+	    Queue<Food> foods = fridge.getFoodList().get(foodName);
+	    if (foods == null || foods.isEmpty()) return null;
+
+	    Food sample = foods.peek();
+	    if (sample instanceof HomeFood) {
+	        return (HomeFood) sample;
+	    }
+	    return null;
 	}
 
 
