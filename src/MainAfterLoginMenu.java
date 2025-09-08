@@ -14,8 +14,8 @@ public class MainAfterLoginMenu {
 
     public MainAfterLoginMenu(User user, Scanner sc) {
         this.user = user;
-        this.userService = userService;
-        this.fridgeService = fridgeService = new FridgeService(user);
+        this.userService = new UserService();
+        this.fridgeService = new FridgeService(user);
         this.gptService = new ChatGptSummaryService();
         this.sc = sc;
     }
