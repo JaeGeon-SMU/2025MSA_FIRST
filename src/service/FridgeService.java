@@ -79,12 +79,12 @@ public class FridgeService {
 	    // 퀵정렬로 expireDate 기준 정렬
 	    List<HomeFood> sortedFoods = quickSort(allFoods);
 	    
-	    // 출력할 음식 개수 결정 (기본값 5)
-	    int displayCount = sortedFoods.isEmpty() ? 5 : sortedFoods.get(0).getSortreorderPoint();
+	 // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
+	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
-	    for (int i = 0; i < sortedFoods.size() && i < displayCount; i++) {
+	    System.out.println("=== ⏰ 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
 	}
@@ -93,13 +93,14 @@ public class FridgeService {
 	private List<HomeFood> quickSort(List<HomeFood> foods) {
 	    if (foods.size() <= 1) return foods;
 
+	    // 리스트 중간 위치의 음식을 피벗으로 지정
 	    HomeFood pivot = foods.get(foods.size() / 2);
 	    LocalDate pivotDate = pivot.getExpireDate();
 
-	    List<HomeFood> left = new ArrayList<>();
-	    List<HomeFood> right = new ArrayList<>();
-	    List<HomeFood> equal = new ArrayList<>();
-	    List<HomeFood> noExpireDate = new ArrayList<>();
+	    List<HomeFood> left = new ArrayList<>();         // 피벗보다 유통기한이 빠른
+	    List<HomeFood> right = new ArrayList<>();        // 피벗보다 유통기한이 늦은
+	    List<HomeFood> equal = new ArrayList<>();        // 피벗과 유통기한이 같은
+	    List<HomeFood> noExpireDate = new ArrayList<>(); // 유통기한이 없는
 
 	    for (HomeFood f : foods) {
 	        if (f.getExpireDate() == null) {
@@ -124,8 +125,9 @@ public class FridgeService {
 	    return result;
 	}
 	
+	
 	/*
-	 * 냉장고 음식의 목록을 칼로리가 높은순으로 정렬해서 리턴하는 함수
+	 * 냉장고 음식의 목록을 단백질이 높은순으로 정렬해서 리턴하는 함수
 	 */
 	public void sortProteinFoodList() {
 	    // 냉장고에 음식이 없으면 메시지 출력
@@ -139,15 +141,15 @@ public class FridgeService {
 	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
 	            .collect(java.util.stream.Collectors.toList());
 
-	    // 퀵정렬로 expireDate 기준 정렬
+	    // 병합 정렬로 Protein 기준 정렬
 	    List<HomeFood> sortedFoods = mergeSort(allFoods);
 	    
 	    // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
-	    int displayCount = sortedFoods.isEmpty() ? 5 : sortedFoods.get(0).getSortreorderPoint();
+	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
-	    for (int i = 0; i < sortedFoods.size() && i < displayCount; i++) {
+	    System.out.println("=== 🍗 단백질 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
 	}
@@ -177,8 +179,8 @@ public class FridgeService {
 	    int rightIndex = 0;
 
 	    while (leftIndex < left.size() && rightIndex < right.size()) {
-	        // 왼쪽과 오른쪽의 칼로리 값을 비교
-	        if (left.get(leftIndex).getCalorie() >= right.get(rightIndex).getCalorie()) {
+	        // 왼쪽과 오른쪽의 단백질 값을 비교
+	        if (left.get(leftIndex).getProtein() >= right.get(rightIndex).getProtein()) {
 	            mergedList.add(left.get(leftIndex));
 	            leftIndex++;
 	        } else {
@@ -199,6 +201,84 @@ public class FridgeService {
 	    }
 
 	    return mergedList;
+	}
+	
+	
+	/*
+	 * 냉장고 음식의 목록을 칼로리가 높은순으로 정렬해서 리턴하는 함수
+	 */
+	public void sortCalorieFoodList() {
+	    // 냉장고에 음식이 없으면 메시지 출력
+	    if (fridge.getFoodList().isEmpty()) {
+	        System.out.println("냉장고가 비어 있습니다.");
+	        return;
+	    }
+
+	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
+	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
+	            .collect(java.util.stream.Collectors.toList());
+
+	    // 힙 정렬로 Calorie 기준 정렬
+	    List<HomeFood> sortedFoods = heapSort(allFoods);
+	    
+	    // 출력할 음식 개수 결정 (기본값은 5이므로 5보다 작은 경우에는 그 값만큼 출력)
+	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
+
+	    // 콘솔 출력
+	    System.out.println("=== 🍫 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    for (int i = 0; i < displayCount; i++) {
+	        System.out.println(sortedFoods.get(i));
+	    }
+	}
+	
+	// 힙 정렬 구현 (칼로리 기준, 오름차순)
+	private List<HomeFood> heapSort(List<HomeFood> foods) {
+	    int n = foods.size();
+
+	    // 1. 최대 힙 만들기
+	    for (int i = n / 2 - 1; i >= 0; i--) {
+	        heapify(foods, n, i);
+	    }
+
+	    // 2. 루트(가장 큰 값)와 마지막 원소 교환 + 힙 크기 줄이기
+	    for (int i = n - 1; i >= 1; i--) {
+	        // 루트와 마지막 원소 교환
+	        HomeFood temp = foods.get(0);
+	        foods.set(0, foods.get(i));
+	        foods.set(i, temp);
+
+	        // 힙 속성 유지
+	        heapify(foods, i, 0); // i는 힙 크기
+	    }
+
+	    return foods;
+	}
+
+	// 힙 속성을 유지하는 함수
+	private void heapify(List<HomeFood> foods, int n, int i) {
+	    int largest = i; // 루트를 가장 큰 값으로 가정
+	    int left = 2 * i + 1; // 왼쪽 자식
+	    int right = 2 * i + 2; // 오른쪽 자식
+
+	    // 왼쪽 자식이 존재하고 루트보다 작으면
+	    if (left < n && foods.get(left).getCalorie() < foods.get(largest).getCalorie()) {
+	        largest = left;
+	    }
+
+	    // 오른쪽 자식이 존재하고 largest보다 작으면
+	    if (right < n && foods.get(right).getCalorie() < foods.get(largest).getCalorie()) {
+	        largest = right;
+	    }
+
+	    // largest가 루트와 다르면 swap 후 재귀적으로 heapify
+	    if (largest != i) {
+	        HomeFood swap = foods.get(i);
+	        foods.set(i, foods.get(largest));
+	        foods.set(largest, swap);
+
+	        heapify(foods, n, largest);
+	    }
 	}
 	
 	
@@ -234,6 +314,8 @@ public class FridgeService {
 		queue.remove();
 		
 	}
+	
+	
 	
 	/*
 	 * 음식 삭제 함수

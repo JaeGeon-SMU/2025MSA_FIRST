@@ -2,7 +2,7 @@ package domain.dto;
 
 import java.util.List;
 
-import domain.Allergy;
+import domain.enums.Allergy;
 
 public class SignUpInfo {
     private double currentWeight;

@@ -3,8 +3,8 @@ package domain.food.homeFood;
 import java.time.LocalDate;
 import java.util.List;
 
-import domain.Allergy;
 import domain.HomeFood;
+import domain.enums.Allergy;
 
 public class StirNodle extends HomeFood{
 	

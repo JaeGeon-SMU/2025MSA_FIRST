@@ -13,12 +13,14 @@ import java.util.Queue;
 public class FridgeTestMain {
 
     public static void main(String[] args) {
-        // 1. 사용자 및 냉장고 생성
-        User user = new User("테스트유저", "1234", 100);
+        // Mock 사용자 및 냉장고 생성
+    	User testUser = MockUserFactory.createMockUser();
+    	System.out.println("테스트 유저 생성됨: " + testUser.getUserId());
+    	
         Fridge fridge = new Fridge();
-        user.setFridge(fridge);
+        testUser.setFridge(fridge);
 
-        FridgeService fridgeService = new FridgeService(user);
+        FridgeService fridgeService = new FridgeService(testUser);
 
         // 2. 냉장고에 HomeFood 객체 추가
         System.out.println("--- 🍔 냉장고에 음식 추가 ---");
@@ -52,14 +54,18 @@ public class FridgeTestMain {
         fridgeService.foodList();
 
         // 유통기한 임박 순으로 정렬
-        System.out.println("\n--- ⏰ 유통기한 임박 순 정렬 ---");
+        System.out.println("\n--- 유통기한 임박 순 정렬 ---");
         fridgeService.sortExpireDateFoodList();
         
-        // 칼로리 높은 순으로 정렬
-        System.out.println("\n--- 🍗 칼로리 높은 순 정렬 ---");
+        // 단백질 높은 순으로 정렬
+        System.out.println("\n--- 단백질 높은 순 정렬 ---");
         fridgeService.sortProteinFoodList();
+        
+        // 칼로리 높은 순으로 정렬
+        System.out.println("\n--- 칼로리 높은 순 정렬 ---");
+        fridgeService.sortCalorieFoodList();
 
-        // 5. 음식 섭취 (가장 오래된 것부터 제거)
+        // 음식 섭취 (가장 오래된 것부터 제거)
         System.out.println("\n--- 😋 요거트 섭취 ---");
         fridgeService.eatFood("요거트");
         System.out.println("\n--- 📝 섭취 후 냉장고 음식 목록 ---");

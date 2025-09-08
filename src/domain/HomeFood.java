@@ -1,9 +1,12 @@
 package domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class HomeFood extends Food {
+import domain.enums.Allergy;
+
+public class HomeFood extends Food implements Serializable{
 	private LocalDate expireDate; //유통기한
 	private int reorderPoint; //최소 재고수량
 	private int sortreorderPoint = 5; // 정렬된 음식을 오름차순 몇개까지 출력할지 정하는 변수
