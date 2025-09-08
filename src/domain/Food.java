@@ -28,6 +28,9 @@ public abstract class Food {
 		return this.protein;
 	}
 	
+	public List<Allergy> getAllergy(){
+		return this.allergy;
+	}
 	
 	 @Override
 	 public String toString() {
