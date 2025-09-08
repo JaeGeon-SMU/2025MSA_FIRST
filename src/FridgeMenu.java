@@ -75,8 +75,11 @@ public class FridgeMenu {
                     saveUser();
                     break;
                 case 11:
-                    System.out.println("음식 추천 기능은 아직 구현되지 않았습니다.");
+                		fridgeService.recommend();
                     break;
+                case 12:
+                		fridgeService.getWaterCnt();
+                		break;
                 case 0:
                     System.out.println("냉장고 문을 닫습니다.");
                     running = false;
@@ -101,6 +104,7 @@ public class FridgeMenu {
         System.out.println("9. 칼로리 높은 음식 보기");
         System.out.println("10. 최소 수량 알림받는 기능 설정하기");
         System.out.println("11. 음식 추천 받기");
+        System.out.println("12. 냉장고 물 수량 확인");
         System.out.println("0. 종료");
         System.out.print("선택: ");
     }

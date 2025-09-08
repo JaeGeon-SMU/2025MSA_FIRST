@@ -363,6 +363,12 @@ public class FridgeService extends recommendTemplate{
         fridge.setWaterCnt(fridge.getWaterCnt() + count);
 	}
 	
+	/*
+	 * 물 개수 확인 함수
+	 */
+	public void getWaterCnt() {
+		System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+	}
 
 	
 	
