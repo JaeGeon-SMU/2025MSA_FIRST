@@ -14,12 +14,15 @@ import domain.Food;
 import domain.User;
 import util.enums.Labels;
 
-// https://rollbar.com/blog/how-to-use-chatgpt-api-with-java/?utm_source=chatgpt.com
 public class ChatGptSummaryService {
+	private final String url = "https://api.openai.com/v1/chat/completions";
+	private final String apiKey = ""; //텍스트파일 저장 or 키 값 입력 
+	private final String model = "gpt-5-nano";
+	public String getApiKey() {
+		return apiKey;
+	}
 	public String chatGptAsk(String prompt) {
-			String url = "https://api.openai.com/v1/chat/completions";
-			String apiKey = ""; //텍스트파일 저장 or 키 값 입력 
-			String model = "gpt-5-nano";
+			
 			
 			try {
 				//URL 커넥션 필요
@@ -37,7 +40,8 @@ public class ChatGptSummaryService {
 				String body = "{"
 				        + "\"model\": \"" + model + "\","
 				        + "\"messages\": ["
-				        + "  {\"role\": \"user\", \"content\": \"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\"}"
+				        + "  {\"role\": \"user\", \"content\": \"" 
+				        + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\"}"
 				        + "]"
 				        + "}";
 				// io입출력으로 사용할 것이냐?
@@ -59,7 +63,7 @@ public class ChatGptSummaryService {
 				}
 				br.close();
 				
-				return extactMessageFromJSONResponse(response.toString());
+				return extractMessageFromJSONResponse(response.toString());
 				
 			}catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -111,15 +115,16 @@ public class ChatGptSummaryService {
             weeklyInfo.append("\n");
 
 		}
-		System.out.println(weeklyInfo.toString());
-		return chatGptAsk(weeklyInfo.toString()+"\n위의 정보로 이번 주 요약과 다음 일주일 요약을 알려줘");
+		System.out.println(weeklyInfo);
+		return chatGptAsk(weeklyInfo.toString()+"\n위의 정보로 이번 주 요약과 다음 주 식단 계획 한 줄로 정리해줘");
 	}
 
-	private String extactMessageFromJSONResponse(String response) {
-		int start = response.indexOf("content") + 11;
-		int end = response.indexOf("\"", start);
-		
-		return response.substring(start, end);
-	}
+   private static String extractMessageFromJSONResponse(String response) {
+       int start = response.indexOf("content")+ 11;
 
+       int end = response.indexOf("\"", start);
+
+       return response.substring(start, end);
+
+   }
 }
