@@ -131,18 +131,7 @@ public class FridgeMenu {
     }
 
     // 물 넣기
-//    private void addWater() {
-//        try {
-//            System.out.print("물 개수 입력 : ");
-//            int waterCount = Integer.parseInt(sc.nextLine());
-//            fridgeService.addWater(waterCount);
-//            System.out.println("냉장고에 물을 " + waterCount + "병 넣었습니다.");
-//        } catch (NumberFormatException e) {
-//            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
-//        } catch (IllegalArgumentException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
+
     private void addWater() {
         while (true) {
             try {
@@ -196,19 +185,7 @@ public class FridgeMenu {
     }
 
     // 물 꺼내먹기
-//    private void eatWater() {
-//        try {
-//        	int waterCnt = fridgeService.getWaterCnt();
-//            System.out.print("꺼낼 물의 양 입력 (병) : ");
-//            int waterCount = Integer.parseInt(sc.nextLine());
-//            
-//            fridgeService.spendWater(waterCount);
-//        } catch (NumberFormatException e) {
-//            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
-//        } catch (IllegalArgumentException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
+
     private void eatWater() {
         int waterCnt = fridgeService.getWaterCnt();
 
