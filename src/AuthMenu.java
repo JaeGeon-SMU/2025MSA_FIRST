@@ -59,52 +59,72 @@ public class AuthMenu {
     }
 
     private void signUp() {
+
+        // 아이디 입력
+        String newId;
         while (true) {
-            try {
-                System.out.print("Id 입력 : ");
-                String newId = sc.nextLine().trim();
+            System.out.print("Id 입력: ");
+            newId = sc.nextLine().trim();
+            if (!newId.isBlank()) break;
+            System.out.println("아이디를 입력하세요.");
+        }
 
-                System.out.print("password 특문포함 + 8글자이상으로 입력해주세요 : ");
-                String newPw = sc.nextLine();
+        // 비밀번호 입력
+        String newPw;
+        while (true) {
+            System.out.print("password (특문포함 + 8글자 이상): ");
+            newPw = sc.nextLine();
+            if (newPw.matches("^(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$")) break;
+            System.out.println("비밀번호는 8글자 이상, 특수문자 포함이어야 합니다.");
+        }
 
-                double currentWeight = askDouble("현재 체중(kg): ", 1, 300);
-                double targetWeight = askDouble("목표 체중(kg): ", 1, 300);
-                int targetProtein = askInt("목표 단백질(g): ", 1, 1000);
-                int targetCalories = askInt("목표 칼로리(kcal): ", 1, 10000);
-                int minMeal = askInt("최소 끼니 수: ", 1, 10);
-                int age = askInt("출생년도: ", 1800, 2030);
-                double height = askDouble("키(cm): ", 1, 300);
-                int targetWater = askInt("목표 수분 섭취량(ml): ", 1, 10000);
-
-                System.out.print("알레르기(쉼표, 예: EGGS,MILK / 없으면 엔터): ");
-                String allergyInput = sc.nextLine().trim();
-
-                List<Allergy> allergy = new ArrayList<>();
-                if (!allergyInput.isEmpty()) {
-                    for (String t : allergyInput.split(",")) {
-                        String key = t.trim().toUpperCase();
-                        try {
-                            allergy.add(Allergy.valueOf(key));
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("알 수 없는 알레르기 무시: " + key);
-                        }
-                    }
+        // 현재 체중
+        double currentWeight = askDouble("현재 체중(kg): ", 1, 300);
+        // 목표 체중
+        double targetWeight = askDouble("목표 체중(kg): ", 1, 300);
+        // 목표 단백질
+        int targetProtein = askInt("목표 단백질(g): ", 1, 1000);
+        // 목표 칼로리
+        int targetCalories = askInt("목표 칼로리(kcal): ", 1, 10000);
+        // 최소 끼니
+        int minMeal = askInt("최소 끼니 수: ", 1, 10);
+        // 출생년도
+        int age = askInt("출생년도: ", 1800, 2030);
+        // 키
+        double height = askDouble("키(cm): ", 50, 300);
+        // 목표 수분 섭취량
+        int targetWater = askInt("목표 수분 섭취량(ml): ", 0, 10000);
+        // 알레르기
+        List<Allergy> allergy = new ArrayList<>();
+        System.out.print("알레르기(쉼표, 예: EGGS,MILK / 없으면 엔터): ");
+        String allergyInput = sc.nextLine().trim();
+        if (!allergyInput.isEmpty()) {
+            for (String t : allergyInput.split(",")) {
+                String key = t.trim().toUpperCase();
+                try {
+                    allergy.add(Allergy.valueOf(key));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("알 수 없는 알레르기 무시: " + key);
                 }
-
-                SignUpInfo info = new SignUpInfo(
-                        newId, newPw, currentWeight, targetWeight,
-                        targetProtein, targetCalories, minMeal, age, height,
-                        targetWater, allergy
-                );
-                auth.signUp(info);
-                System.out.println("회원가입이 완료되었습니다.");
-                return; // 성공 시 메서드 종료
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                System.out.println("다시 입력해주세요.");
             }
         }
+
+        // SignUpInfo 생성 및 회원가입
+        SignUpInfo info = new SignUpInfo(
+                newId, newPw, currentWeight, targetWeight,
+                targetProtein, targetCalories, minMeal, age, height,
+                targetWater, allergy
+        );
+
+        try {
+            auth.signUp(info);
+            System.out.println("회원가입이 완료되었습니다.");
+        } catch (IllegalArgumentException e) {
+            // 서비스에서 중복 아이디 등 예외 발생 시 안내
+            System.out.println("회원가입 실패: " + e.getMessage());
+        }
     }
+    
     private double askDouble(String prompt, double min, double max) {
         while (true) {
             System.out.print(prompt);
