@@ -145,13 +145,15 @@ public class UserService {
             currentWater = user.getGoalHistory().get(today.plusDays(i-6)).getCurrentWater();
             targetWater = user.getGoalHistory().get(today.plusDays(i-6)).getTargetWater() ;
             // .getDayOfMonth LocalDate타입을 일로 int값 반환
-            // 세 개 조건 합당할 시 별 찍어주기
-            if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
-            	System.out.print("★");
-            }
+            
+            
             for(Food food : user.getEatingHistory().get(today.plusDays(i-6))) {            	
             	todayCalories += food.getCalorie();
             	todayProtein += food.getProtein();
+            }
+            // 세 개 조건 합당할 시 별 찍어주기
+            if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
+            	System.out.print("★");
             }
             
             //일 찍어주기
@@ -224,14 +226,16 @@ public class UserService {
                     targetWater = user.getGoalHistory().get(currentday).getTargetWater() ;
                     
                     // .getDayOfMonth LocalDate타입을 일로 int값 반환
+                   
+                    
+                    for(Food food : user.getEatingHistory().get(currentday)) {            	
+                    	todayCalories += food.getCalorie();
+                    	todayProtein += food.getProtein();
+                    }
                     // 세 개 조건 합당할 시 별 찍어주기
                     if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
                     	System.out.print("★");
                     }
-                    for(Food food : user.getEatingHistory().get(currentday)) {            	
-                    	todayCalories += food.getCalorie();
-                    	todayProtein += food.getProtein();
-                    }                
                     //일 찍어주기
                     System.out.printf("%02d", current);
                     
@@ -437,39 +441,44 @@ public class UserService {
  // UserService 안에 추가
 
  // 1) 한 달치 달력 테스트까지 되는 더미 유저 생성 & 저장
- public User createDummyUserWithFridgeAndMonthData() {
-     String userId = "gihyeon";
-     String rawPassword = "1234";
+ // 1) 한 달치 달력 테스트까지 되는 더미 유저 생성 & 저장
+    public User createDummyUserWithFridgeAndMonthData() {
+        String userId = "gihyeon";
+        String rawPassword = "1234";
 
-     // 비밀번호 해시 & 솔트
-     String salt = SHA256PasswordSecurity.generateSalt();
-     String hash = SHA256PasswordSecurity.hashPassword(rawPassword, salt);
+        // 비밀번호 해시 & 솔트
+        String salt = SHA256PasswordSecurity.generateSalt();
+        String hash = SHA256PasswordSecurity.hashPassword(rawPassword, salt);
 
-     User user = new User(
-             userId,
-             hash,
-             salt,
-             47.0,    // currentWeight
-             50.0,    // targetWeight
-             50,      // targetProtein
-             1200,    // targetCalories
-             3,       // minMeal
-             2003,    // birthYear
-             162.0,   // height
-             1500,    // targetWater
-             List.of(Allergy.SHRIMP)
-     );
+        User user = new User(
+                userId,
+                hash,
+                salt,
+                47.0,    // currentWeight
+                50.0,    // targetWeight
+                50,      // targetProtein
+                1200,    // targetCalories
+                3,       // minMeal
+                2003,    // birthYear
+                162.0,   // height
+                1500,    // targetWater
+                List.of(Allergy.SHRIMP)
+        );
 
-     // 냉장고 시딩 (putFood 사용)
-     seedFridge(user);
+        // 냉장고 시딩
+        seedFridge(user);
 
-     // 이번 달 기록 시딩 (목표/섭취/물)
-     seedCurrentMonth(user);
+        // === 여기만 변경 ===
+        // 올해 8월 1일부터 9월 8일까지 기록 생성
+        int year = Year.now().getValue();
+        LocalDate start = LocalDate.of(year, 8, 1);
+        LocalDate end   = LocalDate.of(year, 9, 8);
+        seedDailyRange(user, start, end);
 
-     // 저장
-     userRepo.save(user);
-     return user;
- }
+        // 저장
+        userRepo.save(user);
+        return user;
+    }
 
  // 2) 냉장고에 더미 음식 채우기 (FridgeService.putFood 사용)
  private void seedFridge(User user) {
@@ -495,45 +504,45 @@ public class UserService {
      } catch (IllegalArgumentException ignored) {}
  }
 
- // 3) 이번 달 달력용 데이터 한 번에 채우기
-//     - 매일 DailyGoalInfo 생성 (User 기반)
-//     - 3일마다 목표 달성하도록 음식/물 충족시킴 → 달력에서 OOO 찍히도록
- private void seedCurrentMonth(User user) {
-	    // 오늘 날짜
-	    LocalDate today = LocalDate.now();
-	    // 이번 달의 1일
-	    LocalDate first = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
-	    // 이번 달 마지막 날짜
-	    int lastDay = first.lengthOfMonth();
 
-	    for (int d = 1; d <= lastDay; d++) {
-	        LocalDate day = first.withDayOfMonth(d);
+ 
+//3) 지정한 날짜 범위에 대해 매일 Goal/섭취/물을 채움
+//- 3일마다 목표(칼로리/단백질/물) 달성하도록 구성
+private void seedDailyRange(User user, LocalDate startInclusive, LocalDate endInclusive) {
+if (startInclusive == null || endInclusive == null) return;
+if (startInclusive.isAfter(endInclusive)) return;
 
-	        // 목표 생성
-	        DailyGoalInfo goal = new DailyGoalInfo(user);
-	        user.getGoalHistory().put(day, goal);
+LocalDate day = startInclusive;
+int idx = 0; // 0부터 시작해서 3일마다 달성
 
-	        // 섭취 음식 리스트
-	        List<Food> foods = new java.util.ArrayList<>();
+while (!day.isAfter(endInclusive)) {
+   // 목표 생성(그 날의 스냅샷)
+   DailyGoalInfo goal = new DailyGoalInfo(user);
+   user.getGoalHistory().put(day, goal);
 
-	        // 규칙: 3일마다 달성 (칼로리/단백질/물 충족)
-	        boolean achieve = (d % 3 == 0);
+   // 섭취 음식 리스트
+   List<Food> foods = new java.util.ArrayList<>();
 
-	        if (achieve) {
-	            foods.add(new domain.food.homeFood.Rice());
-	            foods.add(new domain.food.homeFood.ChickenBreast());
-	            foods.add(new domain.food.homeFood.Omlet());
-	            foods.add(new domain.food.homeFood.ProteinBar());
-	            // 물 달성
-	            goal.setCurrentWater(goal.getTargetWater());
-	        } else {
-	            foods.add(new domain.food.homeFood.Rice());
-	            foods.add(new domain.food.homeFood.ChickenBreast());
-	            // 물 절반만
-	            goal.setCurrentWater(goal.getTargetWater() / 2);
-	        }
+   boolean achieve = (idx % 3 == 0); // 3일마다 달성
 
-	        user.getEatingHistory().put(day, foods);
-	    }
-	}
+   if (achieve) {
+       foods.add(new domain.food.homeFood.Rice());
+       foods.add(new domain.food.homeFood.ChickenBreast());
+       foods.add(new domain.food.homeFood.Omlet());
+       foods.add(new domain.food.homeFood.ProteinBar());
+       // 물: 목표치 달성
+       goal.setCurrentWater(goal.getTargetWater());
+   } else {
+       foods.add(new domain.food.homeFood.Rice());
+       foods.add(new domain.food.homeFood.ChickenBreast());
+       // 물: 절반만
+       goal.setCurrentWater(goal.getTargetWater() / 2);
+   }
+
+   user.getEatingHistory().put(day, foods);
+
+   idx++;
+   day = day.plusDays(1);
+}
+}
 }
