@@ -50,6 +50,7 @@ public class FridgeService extends recommendTemplate{
 		for(int i=0; i<count; i++) {
 			//개수만큼 음식 추가
 			if(homeFood != null) queue.add(homeFood);
+			System.out.println("냉장고에 " + name + "을 " + count + "개 넣었습니다.");
 		}
 				
 	}
