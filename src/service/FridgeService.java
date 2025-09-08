@@ -470,5 +470,15 @@ public class FridgeService {
 		//최종 점수 반환
 		return score;		
 	}
+	
+	public void spendWater(int ml) {
+		int waterCnt = fridge.getWaterCnt();
+		if(waterCnt<1) {
+			System.out.println("냉장고에 물이 없습니다!");
+		}else {
+			fridge.setWaterCnt(waterCnt-1);
+			user.getGoalHistory().get(LocalDate.now()).addCurrentWater(500);
+		}
+	}
 
 }

@@ -10,7 +10,9 @@ public class DailyGoalInfo implements Serializable {
     private int targetCalories;
     private int minMeal;
     private double height;
+    //물 량(ml)
     private int targetWater;
+    //물 량(ml)
     private int currentWater;
 
     public DailyGoalInfo() {}
