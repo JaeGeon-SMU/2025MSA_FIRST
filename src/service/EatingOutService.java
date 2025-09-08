@@ -1,5 +1,6 @@
 package service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,8 +11,8 @@ import java.util.Queue;
 import domain.EatingOutFood;
 import domain.Food;
 import domain.FoodFactory;
+import domain.HomeFood;
 import domain.User;
-import domain.enums.Allergy;
 
 public class EatingOutService extends recommendTemplate{
 	
@@ -41,28 +42,22 @@ public class EatingOutService extends recommendTemplate{
 	 */
 	public void eatFood(String name){
 		
-		//음식 리스트에 있는 음식인지 확인
-		/*
-		EatingOutFood eatingOutFood = foodFactory.createEatingOutFood(name);
-		
-		if(eatingOutFoodList.contains(eatingOutFood)) {
-			System.out.println(name+"을 먹었습니다.");
-			
-		}else {
-			//외식 음식 리스트에 없는 음식을 먹을 시 출력
-			System.out.println("주문할 수 없는 음식입니다.");
-		}		
-		 */
-		
 		for(EatingOutFood eatingOutFood : eatingOutFoodList) {
 			if(eatingOutFood.getName().equals(name)) {
+				List<Food> list = user.getEatingHistory().get(LocalDate.now());
+				if(list == null) {
+					list = new ArrayList<Food>();
+					user.getEatingHistory().put(LocalDate.now(), list);
+				}
+				list.add(foodFactory.createEatingOutFood(name));
 				System.out.println(name+"을 먹었습니다.");
 				return;
-			} else continue;			
+			} else continue;
 		}
 		//외식 음식 리스트에 없는 음식을 먹을 시 출력
 		System.out.println("주문할 수 없는 음식입니다.");
 	}
+	
 	
 	/*
 	 * 음식 추천 함수
