@@ -17,7 +17,7 @@ import domain.HomeFood;
 import domain.User;
 import domain.enums.Allergy;
 
-public class FridgeService {
+public class FridgeService extends recommendTemplate{
 	
 	private User user;
 	private Fridge fridge;
@@ -297,12 +297,19 @@ public class FridgeService {
 	 * 남은 음식 수량이 최소 필요 개수보다 낮을 시 경고를 출력
 	 */
 	public void checkFood(String name) {
-		
-		Queue<Food> queue = fridge.getFoodList().get(name);
-		if(queue!=null && (queue.size() <= ((HomeFood)(queue.peek())).getReorderPoint())) {
-			System.out.println("최소 수량 이하입니다.");
-		}
-		
+	    Queue<Food> queue = fridge.getFoodList().get(name);
+
+	    if (queue != null) {
+	        HomeFood food = (HomeFood) queue.peek();
+	        int currentCount = queue.size();
+	        int reorderPoint = food.getReorderPoint();
+
+	        if (currentCount <= reorderPoint) {
+	            System.out.println(name + "의 남은 수량: " + currentCount 
+	                + "개, 최소 수량: " + reorderPoint 
+	                + "개 이하입니다. 추가 주문 잊지말고 해주세요 ~~!");
+	        }
+	    }
 	}
 	
 	/*
@@ -356,6 +363,12 @@ public class FridgeService {
         fridge.setWaterCnt(fridge.getWaterCnt() + count);
 	}
 	
+	/*
+	 * 물 개수 확인 함수
+	 */
+	public void getWaterCnt() {
+		System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+	}
 
 	
 	
@@ -364,6 +377,7 @@ public class FridgeService {
 	 * 알레르기, 칼로리, 단백질 등을 고려하여 해당하는 음식을 출력
 	 * 유통기한 임박, 단백질 높음, 칼로리 높음을 기준으로 상위 3개 추천
 	 */
+	@Override
 	public void recommend() {
 		
 		LocalDate today = LocalDate.now(); //오늘 날짜
@@ -425,7 +439,6 @@ public class FridgeService {
 	/*
 	 * 알레르기 검사 함수
 	 * 해당 음식과 사용자의 알레르기 항목 중 겹치는 것이 있다면 true 반환
-	 */
 	private boolean checkAllergy(User user, Food food) {
 		List<Allergy> userAllergies = user.getAllergy();
 		List<Allergy> foodAllergies = food.getAllergy();
@@ -441,6 +454,7 @@ public class FridgeService {
 		//겹치는 알레르기가 없다면 false 반환
 		return false; 
 	}
+	 */
 	
 	/*
 	 * 음식 점수 계산 함수
@@ -448,7 +462,8 @@ public class FridgeService {
 	 * 단백질과 칼로리는 높을수록 가점
 	 * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
 	 */
-	private double scoring(Food food, int mealCalories, int mealProtein) {
+	@Override
+	protected double scoring(Food food, int mealCalories, int mealProtein) {
 		
 		double score = 0.0;
 		HomeFood homeFood = (HomeFood)food;		

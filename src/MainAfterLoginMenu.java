@@ -10,11 +10,13 @@ public class MainAfterLoginMenu {
     private final UserService userService;
     private final ChatGptSummaryService gptService;
     private final Scanner sc;
+    private final FridgeService fridgeService;
 
-    public MainAfterLoginMenu(User user, UserService userService, ChatGptSummaryService gptService, Scanner sc) {
+    public MainAfterLoginMenu(User user, Scanner sc) {
         this.user = user;
         this.userService = userService;
-        this.gptService = gptService;
+        this.fridgeService = fridgeService = new FridgeService(user);
+        this.gptService = new ChatGptSummaryService();
         this.sc = sc;
     }
 
@@ -75,8 +77,7 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 5: {
-                	FridgeService fridgeService = new FridgeService(user);
-                    FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, sc);
+                	  FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, userService, user, sc);
                     fridgeMenu.start();
                     break;
                 }
