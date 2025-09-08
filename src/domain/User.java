@@ -27,7 +27,6 @@ public class User implements Serializable {
     private int exerciseCarlories; 
     private Fridge fridge;
     private String userId; // 로그인 용
-    private String password;
     private String passwordHash;
     private String passwordSalt;
 
@@ -63,6 +62,8 @@ public class User implements Serializable {
         this.eatingHistory = new HashMap<LocalDate, List<Food>>();
         this.goalHistory = new HashMap<LocalDate, DailyGoalInfo>();
     }
+    
+    
 
     // ---- 오늘 스냅샷 유틸 ----
     public DailyGoalInfo ensureTodayInfo() {

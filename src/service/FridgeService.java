@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 import domain.Food;
 import domain.FoodFactory;
@@ -93,7 +95,7 @@ public class FridgeService extends recommendTemplate{
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== ⏰ 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
@@ -146,10 +148,11 @@ public class FridgeService extends recommendTemplate{
 	        return;
 	    }
 
-	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    // 각 Queue의 맨 앞 음식 1개만 리스트에 담기
 	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
-	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
-	            .collect(java.util.stream.Collectors.toList());
+	            .map(queue -> (HomeFood) queue.peek())  // 맨 앞 1개만
+	            .filter(Objects::nonNull)               // 혹시 null 방지
+	            .collect(Collectors.toList());
 
 	    // 병합 정렬로 Protein 기준 정렬
 	    List<HomeFood> sortedFoods = mergeSort(allFoods);
@@ -158,7 +161,7 @@ public class FridgeService extends recommendTemplate{
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 🍗 단백질 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 단백질 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
@@ -224,11 +227,12 @@ public class FridgeService extends recommendTemplate{
 	        return;
 	    }
 
-	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    // 각 Queue의 맨 앞 음식 1개만 리스트에 담기
 	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
-	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
-	            .collect(java.util.stream.Collectors.toList());
-
+	            .map(queue -> (HomeFood) queue.peek())  // 맨 앞 1개만
+	            .filter(Objects::nonNull)               // 혹시 null 방지
+	            .collect(Collectors.toList());
+	            
 	    // 힙 정렬로 Calorie 기준 정렬
 	    List<HomeFood> sortedFoods = heapSort(allFoods);
 	    
@@ -236,7 +240,7 @@ public class FridgeService extends recommendTemplate{
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 🍫 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
@@ -345,11 +349,14 @@ public class FridgeService extends recommendTemplate{
 	 */
 	public void deleteFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
-		if(queue!=null) {
+		if(queue!=null && fridge.getFoodList().get(name).size() >= count) {
 			for(int i=0; i<count; i++) {
 				//개수만큼 음식 삭제
 				queue.poll();
+				System.out.println("냉장고에서 " + name + "을 " + count + "개 꺼냈습니다.");
 			}
+		}else {
+			System.out.println(name + "의 수량이 " + count + "보다 적습니다.");
 		}
 		
 	}
@@ -366,8 +373,9 @@ public class FridgeService extends recommendTemplate{
 	/*
 	 * 물 개수 확인 함수
 	 */
-	public void getWaterCnt() {
-		System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+	public int getWaterCnt() {
+		//System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+		return fridge.getWaterCnt();
 	}
 
 	
@@ -532,19 +540,17 @@ public class FridgeService extends recommendTemplate{
 		return score;		
 	}
 	*/
-
 	
 	/*
 	 * 물 먹는 함수
 	 */
-	public void spendWater(int ml) {
+	public void spendWater(int drinkWater) {
 		int waterCnt = fridge.getWaterCnt();
-		if(waterCnt<1) {
-			System.out.println("냉장고에 물이 없습니다!");
-		}else {
-			fridge.setWaterCnt(waterCnt-1);
-			user.getGoalHistory().get(LocalDate.now()).addCurrentWater(500);
-		}
+		if(waterCnt >= drinkWater) {
+			fridge.setWaterCnt(waterCnt-drinkWater);
+			user.getGoalHistory().get(LocalDate.now()).addCurrentWater(500*drinkWater);
+    			System.out.println("냉장고에서 물을 " + drinkWater + "병 꺼내 먹었습니다.");
+		}else System.out.println("냉장고에 충분한 물이 없습니다.\n남은 물의 수량: " + waterCnt + "병");
 	}
 	
 	/*
