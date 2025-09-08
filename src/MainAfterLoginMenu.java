@@ -35,10 +35,7 @@ public class MainAfterLoginMenu {
             System.out.println("1. 유저 정보 수정");
             System.out.println("2. 오늘 운동 칼로리 입력");
             System.out.println("3. 회원 정보 보기");
-            System.out.println("4. 냉장고 관리 (예정)");
-            System.out.println("5. 이번 달 통계 보기");
-            System.out.println("6. 로그아웃 / 종료");
-            System.out.println("4. 오늘 먹은 음식 보기");   // ★ 추가
+            System.out.println("4. 오늘 먹은 음식 보기");
             System.out.println("5. 냉장고 관리");
             System.out.println("6. 이번 달 통계 보기");
             System.out.println("7. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
