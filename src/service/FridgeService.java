@@ -299,7 +299,7 @@ public class FridgeService {
 	public void checkFood(String name) {
 		
 		Queue<Food> queue = fridge.getFoodList().get(name);
-		if(queue.size() < ((HomeFood)(queue.peek())).getReorderPoint()) {
+		if(queue!=null && (queue.size() <= ((HomeFood)(queue.peek())).getReorderPoint())) {
 			System.out.println("최소 수량 이하입니다.");
 		}
 		
@@ -318,11 +318,16 @@ public class FridgeService {
 			System.out.println("냉장고에 없는 음식입니다.");
 			return;
 		}
-		
+		List<Food> list = user.getEatingHistory().get(LocalDate.now());
+		if(list == null) {
+			list = new ArrayList<Food>();
+			user.getEatingHistory().put(LocalDate.now(), list);
+		}
+	
 		System.out.println(name+"을 먹었습니다.");
 		checkFood(name);
-		queue.remove();
-		
+		Food remove = queue.remove();
+		list.add(remove);
 	}
 	
 	
