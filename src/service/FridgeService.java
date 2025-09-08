@@ -1,6 +1,7 @@
 package service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.stream.Stream;
 
+import domain.Allergy;
 import domain.Food;
 import domain.FoodFactory;
 import domain.Fridge;
@@ -27,6 +28,7 @@ public class FridgeService {
 	public FridgeService(User user) {
 		this.user = user;
 		this.fridge = user.getFridge();
+		this.foodFactory = new FoodFactory();
 	}
 
 
@@ -34,10 +36,18 @@ public class FridgeService {
 	 * 냉장고에 음식을 넣는 함수
 	 */
 	public void putFood(String name, int count) {
+		Queue<Food> queue = fridge.getFoodList().get(name);
+		
+		if(queue==null) {
+			queue = new LinkedList<>();
+			fridge.getFoodList().put(name, queue);			
+		}
 		
 		for(int i=0; i<count; i++) {
+			HomeFood homeFood = foodFactory.createHomeFood(name);
+			
 			//개수만큼 음식 추가
-			fridge.getFoodList().get(name).add(foodFactory.createHomeFood(name));
+			if(homeFood != null) queue.add(homeFood);
 		}
 				
 	}
@@ -54,7 +64,7 @@ public class FridgeService {
 			return;
 		}else {
 			for(Map.Entry<String, Queue<Food>> foods : fridge.getFoodList().entrySet()) {
-				System.out.println("- " + foods.getKey() + "\t 수량: " + foods.getValue().size() + "개 ");
+				System.out.println("- " + foods.getKey() + "  수량: " + foods.getValue().size() + "개 ");
 	        }			
 		}
 		
@@ -303,13 +313,13 @@ public class FridgeService {
 		
 		Queue<Food> queue = fridge.getFoodList().get(name);
 		
-		if(queue.isEmpty() || queue==null) {
+		if(queue==null || queue.isEmpty()) {
 			//냉장고에 없는 음식을 먹을 시 출력
 			System.out.println("냉장고에 없는 음식입니다.");
 			return;
 		}
 		
-		System.out.println("음식을 먹었습니다.");
+		System.out.println(name+"을 먹었습니다.");
 		checkFood(name);
 		queue.remove();
 		
@@ -345,24 +355,120 @@ public class FridgeService {
 	/*
 	 * 음식 추천 함수
 	 * 알레르기, 칼로리, 단백질 등을 고려하여 해당하는 음식을 출력
+	 * 유통기한 임박, 영양 목표 근접을 기준으로 상위 5개 추천
 	 */
 	public void recommend() {
 		
-		//알레르기 고려
+		LocalDate today = LocalDate.now(); //오늘 날짜
+		int mealsPerDay = user.getMinMeal()>0 ? user.getMinMeal() : 3; //하루 끼니 수
+		int mealCalories = user.getTargetCalories()/mealsPerDay; //한 끼 칼로리
+		int mealProtein = user.getTargetProtein()/mealsPerDay; //한 끼 단백질
 		
-		//칼로리 고려
-		user.getTargetCalories();
+		List<HomeFood> foodCandidates = new ArrayList<>(); //음식 후보 리스트
 		
-		//단백질 고려
-		user.getTargetProtein();
+		for(Map.Entry<String, Queue<Food>> foodEntry : fridge.getFoodList().entrySet()) {
+			Queue<Food> foodQueue = foodEntry.getValue();
+			if(foodQueue==null || foodQueue.isEmpty()) continue;
+			
+			HomeFood repFood = null; //대표 음식
+			for(Food food : foodQueue) {
+				HomeFood homeFood = (HomeFood)food; 
+				
+				//유통기한 지난 음식 제외
+				LocalDate exp = homeFood.getExpireDate();
+				if(exp!=null && exp.isBefore(today)) continue;
+				
+				//알레르기 해당하는 음식 제외
+				if(checkAllergy(user, homeFood)) continue;
+				
+				repFood = homeFood;
+				break;
+			}
+			if(repFood!=null) foodCandidates.add(repFood);			
+			
+		}		
 		
-		//해당하는 음식이 두 개 이상일 시
+		//후보가 없다면 종료
+		if(foodCandidates.isEmpty()) {
+			System.out.println("추천할 수 있는 음식이 없습니다.");
+			return;
+		}
+
 		
+		//점수 계산
+		Map<HomeFood, Double> scoreMap = new HashMap<>();
+		for(HomeFood homeFood : foodCandidates) {
+			double score = scoring(homeFood, today, mealCalories, mealProtein);
+			scoreMap.put(homeFood, score);
+		}		
 		
+		//정렬
+		//점수 내림차순, 유통기한 오름차순
+		Collections.sort(foodCandidates, new HomeFoodScoreComparator(scoreMap));
 		
-		
+		//상위 후보 출력
+		int limit = 3; //출력할 음식 후보 개수
+		for(int i=0; i<Math.min(limit, foodCandidates.size()); i++) {
+			HomeFood homeFood = foodCandidates.get(i);
+			System.out.println((i+1) + " " + homeFood.toString());
+		}
 	}
 	
+	/*
+	 * 알레르기 검사 함수
+	 * 해당 음식과 사용자의 알레르기 항목 중 겹치는 것이 있다면 true 반환
+	 */
+	private boolean checkAllergy(User user, Food food) {
+		List<Allergy> userAllergies = user.getAllergy();
+		List<Allergy> foodAllergies = food.getAllergy();
+		
+		if(userAllergies==null || foodAllergies==null || userAllergies.isEmpty() || foodAllergies.isEmpty()) return false;
+		
+		for (Allergy allergy : foodAllergies) {
+	        if (userAllergies.contains(allergy)) {
+	        	//겹치는 알레르기가 있다면 true 반환
+	            return true; 
+	        }
+	    }
+		//겹치는 알레르기가 없다면 false 반환
+		return false; 
+	}
 	
+	/*
+	 * 음식 점수 계산 함수
+	 * 유통기한: 임박할수록 가점
+	 * 단백질과 칼로리는 높을수록 가점
+	 * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
+	 */
+	private double scoring(HomeFood homeFood, LocalDate today, int mealCalories, int mealProtein) {
+		
+		double score = 0.0;
+		
+		//유통기한 점수 계산
+		long daysLeft = 1000;
+		LocalDate exp = homeFood.getExpireDate();
+		if(exp!=null) {
+			daysLeft = ChronoUnit.DAYS.between(today, exp);
+			if(daysLeft<0) daysLeft = 0;
+		}
+		score += 100.0/(daysLeft+1.0);
+		
+		//칼로리 점수 계산
+		int calTarget = (mealCalories>0) ? mealCalories : 1;
+		double calRatio = homeFood.getCalorie() / (double) calTarget;
+		double calCapped = Math.min(calRatio, 2.0); //상한
+		double calweight = 10.0; //가중치
+		score += calweight*calCapped;
+		
+		//단백질 점수 계산
+		int proTarget = (mealProtein>0) ? mealProtein : 1;
+		double proRatio = homeFood.getProtein() / (double) proTarget;
+		double proCapped = Math.min(proRatio, 2.0); //상한
+		double proweight = 20.0; //가중치
+		score += proweight*proCapped;
+		
+		//최종 점수 반환
+		return score;		
+	}
 
 }
