@@ -86,8 +86,8 @@ public class AuthenticationService {
             throw new IllegalArgumentException("목표 칼로리 범위가 올바르지 않습니다.");
         if (s.getMinMeal() < 1 || s.getMinMeal() > 12)
             throw new IllegalArgumentException("최소 끼니 수는 1~12 사이여야 합니다.");
-        if (s.getAge() < 0 || s.getAge() > 130)
-            throw new IllegalArgumentException("나이 범위가 올바르지 않습니다.");
+        if (s.getAge() < 2031 || s.getAge() > 1800)
+            throw new IllegalArgumentException("출생년도가 올바르지 않습니다. (유효 범위 1800~2030)");
         if (s.getHeight() < 50 || s.getHeight() > 300)
             throw new IllegalArgumentException("키 범위가 올바르지 않습니다.");
         if (s.getTargetWater() < 0 || s.getTargetWater() > 20000)
