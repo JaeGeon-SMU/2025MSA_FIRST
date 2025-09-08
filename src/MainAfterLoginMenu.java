@@ -8,11 +8,13 @@ public class MainAfterLoginMenu {
     private final User user;
     private final UserService userService;
     private final Scanner sc;
+    private final FridgeService fridgeService;
 
-    public MainAfterLoginMenu(User user, UserService userService, Scanner sc) {
+    public MainAfterLoginMenu(User user, UserService userService, Scanner sc, FridgeService fridgeService) {
         this.user = user;
         this.userService = userService;
         this.sc = sc;
+        this.fridgeService = fridgeService;
     }
 
     public void run() {
@@ -69,8 +71,7 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 5: {
-                	  FridgeService fridgeService = new FridgeService(user);
-                    FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, sc);
+                	FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, userService, user, sc);
                     fridgeMenu.start();
                     break;
                 }

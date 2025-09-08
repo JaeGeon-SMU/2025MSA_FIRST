@@ -33,7 +33,8 @@ public class App {
        
 
             // 로그인 성공 후 메인 메뉴로 이동
-            MainAfterLoginMenu mainMenu = new MainAfterLoginMenu(user, userService, sc);
+            FridgeService fridgeService = new FridgeService(user);
+            MainAfterLoginMenu mainMenu = new MainAfterLoginMenu(user, userService, sc, fridgeService);
             mainMenu.run();
             
         }
