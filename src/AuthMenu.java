@@ -72,7 +72,7 @@ public class AuthMenu {
                 int targetProtein = askInt("목표 단백질(g): ", 1, 1000);
                 int targetCalories = askInt("목표 칼로리(kcal): ", 1, 10000);
                 int minMeal = askInt("최소 끼니 수: ", 1, 10);
-                int age = askInt("나이: ", 1, 150);
+                int age = askInt("출생년도: ", 1800, 2030);
                 double height = askDouble("키(cm): ", 1, 300);
                 int targetWater = askInt("목표 수분 섭취량(ml): ", 1, 10000);
 
