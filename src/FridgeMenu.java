@@ -123,7 +123,6 @@ public class FridgeMenu {
             System.out.print("개수 입력 : ");
             int foodCount = Integer.parseInt(sc.nextLine());
             fridgeService.putFood(foodName, foodCount);
-            System.out.println("냉장고에 " + foodName + "을 " + foodCount + "개 넣었습니다.");
         } catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
