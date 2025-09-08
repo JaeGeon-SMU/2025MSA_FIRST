@@ -329,7 +329,7 @@ public class FridgeService {
 	
 	/*
 	 * 음식 삭제 함수
-	 * 음식을 삭제하면 해당 음식의 수량을 0으로 바꾼다.
+	 * 음식을 삭제하면 해당 음식의 수량을 줄인다.
 	 */
 	public void deleteFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
@@ -350,6 +350,8 @@ public class FridgeService {
 	public void addWater(int count) {
         fridge.setWaterCnt(fridge.getWaterCnt() + count);
 	}
+	
+
 	
 	
 	/*
@@ -470,5 +472,7 @@ public class FridgeService {
 		//최종 점수 반환
 		return score;		
 	}
+
+
 
 }
