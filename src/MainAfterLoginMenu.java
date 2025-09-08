@@ -16,8 +16,6 @@ public class MainAfterLoginMenu {
     }
 
     public void run() {
-        userService.notifyEmergencyDay(user);
-
         // 오늘 기록 보장 (원하면 유지)
         user.ensureTodayInfo();
         userService.saveUser(user);
