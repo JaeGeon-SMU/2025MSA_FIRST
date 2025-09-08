@@ -36,6 +36,7 @@ public class HomeFood extends Food implements Serializable{
 	}
 
 
+	// 최소수량 재설정을 위한 setter
 	public void setReorderPoint(int reorderPoint) {
 	    this.reorderPoint = reorderPoint;
 	}
