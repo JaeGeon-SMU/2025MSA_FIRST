@@ -273,45 +273,98 @@ public class UserService {
         System.out.println();
 
     }
-    // ===== 칼로리 섭취량 표시 =====
-    //목표 칼로리 - 현재 섭취량(for문 합산 , List<Food>) 메인화면 사용 
+    
+//    private static final String RESET = "\u001B[0m";
+//    private static final String RED = "\u001B[31m";
+//    private static final String GREEN = "\u001B[32m";
+//    private static final String YELLOW = "\u001B[33m";
+    private static final String RESET = "";
+    private static final String RED = "";
+    private static final String GREEN = "";
+    private static final String YELLOW = "";
+
+    // 각 섭취량 표시
     public void checkDailyCalories(User user) {
-        //List<Food> 형태 필요
-    	//운동한 만큼 더 먹어야한다!
         int todayCalories = 0;
-        if(user.getEatingHistory().get(LocalDate.now()) == null || user.getGoalHistory().get(LocalDate.now()) == null) {
-        	of.print(Labels.CHECKCALORIES.getValue(), "금일 식단 데이터 부족");
-        	return;
+        int targetCalories;
+
+        if (user.getGoalHistory().get(LocalDate.now()) == null) {
+            System.out.println("오늘 목표로 해야 할 칼로리 섭취량 : 데이터 부족");
+            return;
         }
-        for(Food food : user.getEatingHistory().get(LocalDate.now())) {            	
-        	todayCalories += food.getCalorie();
-        }      
-        //운동 칼로리 추가 이후 주석 해제
-//        todayCalories += user.getGoalHistory().get(LocalDate.now()).getExerciseCarlories();
-        of.print(Labels.CHECKCALORIES.getValue() , (user.getTargetCalories()-todayCalories) );
+
+        targetCalories = user.getTargetCalories();
+
+        List<Food> foods = user.getEatingHistory().get(LocalDate.now());
+        if (foods != null) {
+            for (Food food : foods) {
+                todayCalories += food.getCalorie();
+            }
+        }
+
+        printGauge("칼로리", todayCalories, targetCalories);
     }
-    //목표 단백질 - 현재 섭취량(for문 합산 , List<Food>) 메인화면 사용
-    public void checkDailyProtein(User user){
+
+    // 단백질 체크
+    public void checkDailyProtein(User user) {
         int todayProtein = 0;
-        if(user.getEatingHistory().get(LocalDate.now()) == null || user.getGoalHistory().get(LocalDate.now()) == null) {
-        	of.print(Labels.CHECKPROTEIN.getValue(), "금일 식단 데이터 부족");
-        	return;
+        int targetProtein;
+
+        if (user.getGoalHistory().get(LocalDate.now()) == null) {
+            System.out.println("오늘 목표로 해야 할 단백질 섭취량 : 데이터 부족");
+            return;
         }
-        for(Food food : user.getEatingHistory().get(LocalDate.now())) {            	
-        	todayProtein += food.getProtein();
-        }      
-        of.print(Labels.CHECKPROTEIN.getValue() , (user.getTargetProtein()-todayProtein) );       
+
+        targetProtein = user.getTargetProtein();
+
+        List<Food> foods = user.getEatingHistory().get(LocalDate.now());
+        if (foods != null) {
+            for (Food food : foods) {
+                todayProtein += food.getProtein();
+            }
+        }
+
+        printGauge("단백질", todayProtein, targetProtein);
     }
+
+    // 물 체크
     public void checkDailyWater(User user) {
-    	int todayWater = 0;
-        if( user.getGoalHistory().get(LocalDate.now()) == null) {
-        	of.print(Labels.CHECKWATER.getValue(), "금일 물 데이터 부족");
-        	return;
+        if (user.getGoalHistory().get(LocalDate.now()) == null) {
+            System.out.println("오늘 목표로 해야 할 물 섭취량 : 데이터 부족");
+            return;
         }
-    	of.print(Labels.CHECKWATER.getValue(), 
-    	user.getGoalHistory().get(LocalDate.now()).getTargetWater() 
-    	- user.getGoalHistory().get(LocalDate.now()).getCurrentWater()  );
+
+        int currentWater = user.getGoalHistory().get(LocalDate.now()).getCurrentWater();
+        int targetWater = user.getGoalHistory().get(LocalDate.now()).getTargetWater();
+
+        printGauge("물", currentWater, targetWater);
     }
+
+    // HP 바 스타일 컬러 게이지
+    private void printGauge(String label, int current, int target) {
+        int barLength = 20; // 게이지 길이
+        int filledLength = (int) ((double) current / target * barLength);
+        if (filledLength > barLength) filledLength = barLength;
+
+        StringBuilder bar = new StringBuilder();
+
+        // 현재 섭취량: 노란색
+        for (int i = 0; i < filledLength; i++) bar.append(YELLOW).append("#");
+
+        // 목표 달성량 남은 부분: 초록색
+        for (int i = filledLength; i < barLength; i++) bar.append(GREEN).append("-");
+
+        bar.append(RESET).append(" | 목표: ").append(target);
+
+        // 초과량: 빨강
+        if (current > target) {
+            int excess = current - target;
+            bar.append(RED).append(" ***초과 ").append(excess).append("***").append(RESET);
+        }
+
+        System.out.println("오늘 목표로 해야 할 " + label + " 섭취량 : " + bar.toString());
+    }
+    
     // ====== 저장 ======
     public void saveUser(User user) {
         userRepo.save(user);
