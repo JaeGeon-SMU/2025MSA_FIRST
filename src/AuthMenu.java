@@ -64,7 +64,7 @@ public class AuthMenu {
                 System.out.print("Id 입력 : ");
                 String newId = sc.nextLine().trim();
 
-                System.out.print("password 입력 : ");
+                System.out.print("password 특문포함 + 8글자이상으로 입력해주세요 : ");
                 String newPw = sc.nextLine();
 
                 double currentWeight = askDouble("현재 체중(kg): ", 1, 300);

@@ -33,6 +33,7 @@ public class UserService {
         String allergies = (user.getAllergy() == null || user.getAllergy().isEmpty()) ? "없음" : user.getAllergy().toString();
         of.print(Labels.ALLERGIES.getValue(),               allergies);
     }
+    
     //전날 최소 먹어야 하는 끼니보다 적게 먹은 경우 비상데이 알림
     public void notifyEmergencyDay(User user) {
         List<Food> yesterdayFoodList = user.getEatingHistory().getOrDefault(LocalDate.now().minusDays(1), null);
