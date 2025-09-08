@@ -355,6 +355,8 @@ public class FridgeService extends recommendTemplate{
 				queue.poll();
 				System.out.println("냉장고에서 " + name + "을 " + count + "개 꺼냈습니다.");
 			}
+		}else if(queue==null) {
+			System.out.println("냉장고에 " + name + "가 존재하지 않습니다.");
 		}else {
 			System.out.println(name + "의 수량이 " + count + "보다 적습니다.");
 		}
