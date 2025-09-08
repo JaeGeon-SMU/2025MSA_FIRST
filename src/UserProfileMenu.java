@@ -66,6 +66,7 @@ public class UserProfileMenu {
     }
 
     // ================= 입력 → 서비스 호출 =================
+    
 
     private void setCurrentWeight() {
         double v = readDoubleLoop("현재 체중을 입력하세요 (예: 72.5): ");
