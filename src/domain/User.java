@@ -20,7 +20,7 @@ public class User implements Serializable {
     private int minMeal;
     private int birthYear;
     private double height;
-    private int targetWater; // 목표 물 량
+    private int targetWater; // 목표 물 량(ml)
     private List<Allergy> allergy;
     private Map<LocalDate, List<Food>> eatingHistory;
     private Map<LocalDate, DailyGoalInfo> goalHistory;

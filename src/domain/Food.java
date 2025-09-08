@@ -35,6 +35,8 @@ public abstract class Food implements Serializable{
 		return this.allergy;
 	}
 	
+	public String getName() { return this.name; }
+	
 	 @Override
 	 public String toString() {
 		 return "name: " + this.name + ", calorie: " + this.calorie + ", protein: " + this.protein;
