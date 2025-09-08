@@ -23,7 +23,8 @@ public class AuthMenu {
     public User run() {
         while (true) {
             System.out.println("1. 회원가입  2. 로그인  3. 종료");
-            int sel = askInt("선택: ", 1, 3);
+            System.out.println();
+            int sel = askInt("\t선택: ", 1, 3);
 
             if (sel == 1) signUp();
             else if (sel == 2) {

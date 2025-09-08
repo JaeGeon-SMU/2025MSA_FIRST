@@ -95,7 +95,7 @@ public class UserService {
 //      일주일 목표
         LocalDate today = LocalDate.now();
         final int week = 7;
-        System.out.printf("이번 주의 달력, 오늘은 %d월 %d일\n",today.getMonth().getValue() , today.getDayOfMonth());
+        System.out.printf("\t이번 주의 달력,\t오늘은 %d월 %d일\n",today.getMonth().getValue() , today.getDayOfMonth());
         for(int i = 0 ; i < week ; i++) {
             //6일 전으로 해야지 하루 전 요일 시작, 그 다음부터 하나하나 더해가기
             switch(today.plusDays(i-6).getDayOfWeek().getValue()) {
@@ -138,7 +138,7 @@ public class UserService {
         	}
         	todayCalories = 0 ;
             todayProtein = 0 ;
-            targetCalories = user.getGoalHistory().get(today.plusDays(i-6)).getTargetCalories() ;
+            targetCalories = user.getGoalHistory().get(today.plusDays(i-6)).getTargetCalories() + user.getGoalHistory().get(today.plusDays(i-6)).getExerciseCarlories() ;
             targetProtein = user.getGoalHistory().get(today.plusDays(i-6)).getTargetProtein();
             currentWater = user.getGoalHistory().get(today.plusDays(i-6)).getCurrentWater();
             targetWater = user.getGoalHistory().get(today.plusDays(i-6)).getTargetWater() ;
@@ -215,7 +215,7 @@ public class UserService {
             	if(user.getGoalHistory().get(currentday) == null || user.getEatingHistory().get(currentday) == null ) {
             		System.out.printf("%02dXXX\t", current);
             	}else {
-            		targetCalories = user.getGoalHistory().get(currentday).getTargetCalories() ;
+            		targetCalories = user.getGoalHistory().get(currentday).getTargetCalories() + user.getGoalHistory().get(currentday).getExerciseCarlories();
                     targetProtein = user.getGoalHistory().get(currentday).getTargetProtein();
                     currentWater = user.getGoalHistory().get(currentday).getCurrentWater();
                     targetWater = user.getGoalHistory().get(currentday).getTargetWater() ;
@@ -292,7 +292,7 @@ public class UserService {
             return;
         }
 
-        targetCalories = user.getTargetCalories();
+        targetCalories = user.getGoalHistory().get(LocalDate.now()).getTargetCalories()  + user.getGoalHistory().get(LocalDate.now()).getExerciseCarlories();
 
         List<Food> foods = user.getEatingHistory().get(LocalDate.now());
         if (foods != null) {
@@ -329,7 +329,7 @@ public class UserService {
     // 물 체크
     public void checkDailyWater(User user) {
         if (user.getGoalHistory().get(LocalDate.now()) == null) {
-            System.out.println("오늘 목표로 해야 할 물 섭취량 : 데이터 부족");
+            System.out.println("오늘 목표로 해야 할 물 섭취량 :\t데이터 부족");
             return;
         }
 
@@ -361,7 +361,7 @@ public class UserService {
             bar.append(RED).append(" ***초과 ").append(excess).append("***").append(RESET);
         }
 
-        System.out.println("오늘 목표로 해야 할 " + label + " 섭취량 : " + bar.toString());
+        System.out.println("오늘 목표로 해야 할 " + label + " 섭취량\t: " + bar.toString());
     }
     
     // ====== 저장 ======
