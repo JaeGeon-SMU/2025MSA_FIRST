@@ -335,7 +335,6 @@ public class FridgeService extends recommendTemplate{
 			user.getEatingHistory().put(LocalDate.now(), list);
 		}
 	
-		System.out.println(name+"을 먹었습니다.");
 		checkFood(name);
 		Food remove = queue.remove();
 		list.add(remove);
