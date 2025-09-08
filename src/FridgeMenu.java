@@ -155,7 +155,6 @@ public class FridgeMenu {
         try {
             int foodCount = Integer.parseInt(countInput);
             fridgeService.deleteFood(foodName, foodCount);
-            System.out.println("냉장고에서 " + foodName + "을 " + foodCount + "개 꺼냈습니다.");
         } catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
@@ -169,7 +168,6 @@ public class FridgeMenu {
             System.out.print("먹을 음식명 입력 : ");
             String foodName = sc.nextLine();
             fridgeService.eatFood(foodName);
-            System.out.println("냉장고에서 " + foodName + "을 꺼내 먹었습니다.");
         } catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {

@@ -11,12 +11,19 @@ public class MainAfterLoginMenu {
     private final ChatGptSummaryService gptService;
     private final Scanner sc;
     private final FridgeService fridgeService;
+    private String quotes;
 
     public MainAfterLoginMenu(User user, Scanner sc) {
         this.user = user;
         this.userService = new UserService();
         this.fridgeService = new FridgeService(user);
         this.gptService = new ChatGptSummaryService();
+        //시연할 때 키 값 추가!
+        if(!gptService.getApiKey().equals("")) {
+        	this.quotes = gptService.chatGptAsk("[ {명언 내용} - {인물} ] 형태로 실제 인물이 말한 명언 하나만 한국어로 적어, 난 지금 살 찌우려고 노력하는 중이야.");
+        }else {
+        	this.quotes = "";
+        }
         this.sc = sc;
     }
 
@@ -28,9 +35,7 @@ public class MainAfterLoginMenu {
         while (true) {
             System.out.println();
             userService.checkWeeklyGoal(user);
-            
-            //시연할때만 추가
-//            System.out.println(gptService.chatGptAsk("[ {명언 내용} - {인물} ] 형태로 실제 인물이 말한 명언 하나만 한국어로 적어, 난 지금 살 찌우려고 노력하는 중이야."));
+            System.out.println(this.quotes);
             System.out.println("사용자 : " + user.getUserId());
             userService.checkDailyCalories(user);
             userService.checkDailyProtein(user);
@@ -84,8 +89,12 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 7: {
-                	System.out.println("\t...요약중...");
-                	System.out.println(gptService.askGptWithUserPrompt(user));
+                	if(!gptService.getApiKey().equals("")) {
+                		System.out.println("\t...요약중...\n");
+                		System.out.println(gptService.askGptWithUserPrompt(user).replace("\"", "\\\"").replace("\n", "\\n") + "\"}");
+                    }else {
+                    	System.out.println("GPT API 키 값 에러");
+                    }
                 	break;
                 }
                 case 8: {
@@ -101,7 +110,7 @@ public class MainAfterLoginMenu {
     }
 
     private void inputExerciseCalories() {
-        System.out.println("오늘의 운동 칼로리를 입력해주세요 (0 이상의 정수)");
+    	System.out.println("오늘의 운동 칼로리를 입력해주세요 (예: 300, 500, 1000)");
         System.out.println("현재 운동 칼로리: " + user.getExerciseCarlories());
 
         while (true) {
@@ -123,6 +132,20 @@ public class MainAfterLoginMenu {
             } catch (NumberFormatException e) {
                 System.out.println("숫자만 입력하세요.");
             }
+        }
+    }
+    private static void clearConsole() {
+        try {
+            // Windows의 경우
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            // Linux/macOS의 경우
+            else {
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (final Exception e) {
+            // 에러 처리
         }
     }
 }

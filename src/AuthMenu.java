@@ -59,62 +59,66 @@ public class AuthMenu {
     }
 
     private void signUp() {
-        try {
-            System.out.print("Id 입력 : ");
-            String newId = sc.nextLine().trim();
+        while (true) {
+            try {
+                System.out.print("Id 입력 : ");
+                String newId = sc.nextLine().trim();
 
-            System.out.print("password 입력 : ");
-            String newPw = sc.nextLine();
+                System.out.print("password 입력 : ");
+                String newPw = sc.nextLine();
 
-            System.out.print("현재 체중(kg): ");
-            double currentWeight = Double.parseDouble(sc.nextLine());
+                double currentWeight = askDouble("현재 체중(kg): ", 1, 300);
+                double targetWeight = askDouble("목표 체중(kg): ", 1, 300);
+                int targetProtein = askInt("목표 단백질(g): ", 1, 1000);
+                int targetCalories = askInt("목표 칼로리(kcal): ", 1, 10000);
+                int minMeal = askInt("최소 끼니 수: ", 1, 10);
+                int age = askInt("출생년도: ", 1800, 2030);
+                double height = askDouble("키(cm): ", 1, 300);
+                int targetWater = askInt("목표 수분 섭취량(ml): ", 1, 10000);
 
-            System.out.print("목표 체중(kg): ");
-            double targetWeight = Double.parseDouble(sc.nextLine());
+                System.out.print("알레르기(쉼표, 예: EGGS,MILK / 없으면 엔터): ");
+                String allergyInput = sc.nextLine().trim();
 
-            System.out.print("목표 단백질(g): ");
-            int targetProtein = Integer.parseInt(sc.nextLine());
-
-            System.out.print("목표 칼로리(kcal): ");
-            int targetCalories = Integer.parseInt(sc.nextLine());
-
-            System.out.print("최소 끼니 수: ");
-            int minMeal = Integer.parseInt(sc.nextLine());
-
-            System.out.print("나이: ");
-            int age = Integer.parseInt(sc.nextLine());
-
-            System.out.print("키(cm): ");
-            double height = Double.parseDouble(sc.nextLine());
-
-            System.out.print("목표 수분 섭취량(ml): ");
-            int targetWater = Integer.parseInt(sc.nextLine());
-
-            System.out.print("알레르기(쉼표, 예: EGGS,MILK / 없으면 엔터): ");
-            String allergyInput = sc.nextLine().trim();
-
-            List<Allergy> allergy = new ArrayList<>();
-            if (!allergyInput.isEmpty()) {
-                for (String t : allergyInput.split(",")) {
-                    String key = t.trim().toUpperCase();
-                    try {
-                        allergy.add(Allergy.valueOf(key));
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("알 수 없는 알레르기 무시: " + key);
+                List<Allergy> allergy = new ArrayList<>();
+                if (!allergyInput.isEmpty()) {
+                    for (String t : allergyInput.split(",")) {
+                        String key = t.trim().toUpperCase();
+                        try {
+                            allergy.add(Allergy.valueOf(key));
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("알 수 없는 알레르기 무시: " + key);
+                        }
                     }
                 }
-            }
 
-            SignUpInfo info = new SignUpInfo(
-                    newId, newPw, currentWeight, targetWeight,
-                    targetProtein, targetCalories, minMeal, age, height,
-                    targetWater, allergy
-            );
-            auth.signUp(info);
-        } catch (NumberFormatException e) {
-            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+                SignUpInfo info = new SignUpInfo(
+                        newId, newPw, currentWeight, targetWeight,
+                        targetProtein, targetCalories, minMeal, age, height,
+                        targetWater, allergy
+                );
+                auth.signUp(info);
+                System.out.println("회원가입이 완료되었습니다.");
+                return; // 성공 시 메서드 종료
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                System.out.println("다시 입력해주세요.");
+            }
+        }
+    }
+    private double askDouble(String prompt, double min, double max) {
+        while (true) {
+            System.out.print(prompt);
+            String in = sc.nextLine().trim();
+            try {
+                double n = Double.parseDouble(in);
+                if (n < min || n > max) {
+                    System.out.printf("%.1f~%.1f 중에서 입력하세요.%n", min, max);
+                    continue;
+                }
+                return n;
+            } catch (NumberFormatException e) {
+                System.out.println("숫자를 입력하세요.");
+            }
         }
     }
 

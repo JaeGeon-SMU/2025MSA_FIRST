@@ -40,14 +40,14 @@ public class FridgeService extends recommendTemplate{
 	public void putFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
 		
-		if(queue==null) {
+		HomeFood homeFood = foodFactory.createHomeFood(name);
+		
+		if(queue==null && homeFood!=null) {
 			queue = new LinkedList<>();
 			fridge.getFoodList().put(name, queue);			
 		}
 		
 		for(int i=0; i<count; i++) {
-			HomeFood homeFood = foodFactory.createHomeFood(name);
-			
 			//개수만큼 음식 추가
 			if(homeFood != null) queue.add(homeFood);
 		}
@@ -334,11 +334,10 @@ public class FridgeService extends recommendTemplate{
 			list = new ArrayList<Food>();
 			user.getEatingHistory().put(LocalDate.now(), list);
 		}
-	
-		System.out.println(name+"을 먹었습니다.");
 		checkFood(name);
 		Food remove = queue.remove();
 		list.add(remove);
+		System.out.println("냉장고에서 " + name + "을 꺼내 먹었습니다.");
 	}
 	
 	
@@ -349,11 +348,16 @@ public class FridgeService extends recommendTemplate{
 	 */
 	public void deleteFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
-		if(queue!=null) {
+		if(queue!=null && fridge.getFoodList().get(name).size() >= count) {
 			for(int i=0; i<count; i++) {
 				//개수만큼 음식 삭제
 				queue.poll();
+				System.out.println("냉장고에서 " + name + "을 " + count + "개 꺼냈습니다.");
 			}
+		}else if(queue==null) {
+			System.out.println("냉장고에 " + name + "가 존재하지 않습니다.");
+		}else {
+			System.out.println(name + "의 수량이 " + count + "보다 적습니다.");
 		}
 		
 	}
