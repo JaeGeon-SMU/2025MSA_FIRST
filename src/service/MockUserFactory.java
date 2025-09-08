@@ -1,10 +1,10 @@
 package service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import domain.User;
-import domain.Allergy;
+import domain.enums.Allergy;
+
 
 public class MockUserFactory {
 
