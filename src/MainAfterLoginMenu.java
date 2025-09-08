@@ -51,7 +51,7 @@ public class MainAfterLoginMenu {
             userService.checkDailyProtein(user);
             userService.checkDailyWater(user);
             System.out.println();
-<<<<<<< HEAD
+
             System.out.println("==== 메인 메뉴 ====");
             System.out.println("1. 유저 정보 수정");
             System.out.println("2. 오늘 운동 칼로리 입력");
@@ -63,7 +63,7 @@ public class MainAfterLoginMenu {
             System.out.println("8. AI 요약");
             System.out.println("9. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
             System.out.print("선택: ");
-=======
+
             System.out.println("\t============ 메인 메뉴 ============");
             System.out.println("\t\t1. 유저 정보 수정");
             System.out.println("\t\t2. 오늘 운동 칼로리 입력");
@@ -75,7 +75,6 @@ public class MainAfterLoginMenu {
             System.out.println("\t\t8. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
             System.out.println();
             System.out.print("\t\t선택: ");
->>>>>>> 68de59a141d7865780be5eb1ad945895bb9e2df8
 
             String in = sc.nextLine().trim();
             int sel;
