@@ -1,10 +1,11 @@
-package service;
+package util;
 
 import domain.EatingOutFood;
 import domain.Food;
 import domain.Fridge;
 import domain.HomeFood;
 import domain.User;
+import service.UserService;
 
 import java.time.LocalDate;
 import java.util.LinkedList;

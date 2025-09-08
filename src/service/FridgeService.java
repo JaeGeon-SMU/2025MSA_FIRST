@@ -13,11 +13,13 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 
 import domain.Food;
-import domain.FoodFactory;
 import domain.Fridge;
 import domain.HomeFood;
 import domain.User;
+import domain.comparator.HomeFoodScoreComparator;
 import domain.enums.Allergy;
+import domain.factory.FoodFactory;
+import service.template.recommendTemplate;
 
 public class FridgeService extends recommendTemplate{
 	
@@ -408,7 +410,7 @@ public class FridgeService extends recommendTemplate{
 		
 		LocalDate today = LocalDate.now(); //오늘 날짜
 		int mealsPerDay = user.getMinMeal()>0 ? user.getMinMeal() : 3; //하루 끼니 수
-		int mealCalories = user.getTargetCalories()/mealsPerDay; //한 끼 칼로리
+		int mealCalories = (user.getTargetCalories()+user.getExerciseCarlories())/mealsPerDay; //한 끼 칼로리
 		int mealProtein = user.getTargetProtein()/mealsPerDay; //한 끼 단백질
 		
 		List<HomeFood> foodCandidates = new ArrayList<>(); //음식 후보 리스트

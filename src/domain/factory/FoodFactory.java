@@ -1,5 +1,7 @@
-package domain;
+package domain.factory;
 
+import domain.EatingOutFood;
+import domain.HomeFood;
 import domain.food.eatingOutFood.FlatfishNigiriSushi;
 import domain.food.eatingOutFood.FriedChicken;
 import domain.food.eatingOutFood.Kimbap;
