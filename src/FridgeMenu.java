@@ -131,16 +131,37 @@ public class FridgeMenu {
     }
 
     // 물 넣기
+//    private void addWater() {
+//        try {
+//            System.out.print("물 개수 입력 : ");
+//            int waterCount = Integer.parseInt(sc.nextLine());
+//            fridgeService.addWater(waterCount);
+//            System.out.println("냉장고에 물을 " + waterCount + "병 넣었습니다.");
+//        } catch (NumberFormatException e) {
+//            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
+//        } catch (IllegalArgumentException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
     private void addWater() {
-        try {
-            System.out.print("물 개수 입력 : ");
-            int waterCount = Integer.parseInt(sc.nextLine());
-            fridgeService.addWater(waterCount);
-            System.out.println("냉장고에 물을 " + waterCount + "병 넣었습니다.");
-        } catch (NumberFormatException e) {
-            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        while (true) {
+            try {
+                System.out.print("물 개수 입력 : ");
+                String input = sc.nextLine();
+                int waterCount = Integer.parseInt(input);
+                if (waterCount <= 0) {
+                    System.out.println("물 개수는 양수로 입력해야 합니다. 다시 시도하세요.");
+                    continue; // 음수 또는 0을 입력하면 다시 루프의 시작으로
+                }
+
+                fridgeService.addWater(waterCount);
+                System.out.println("냉장고에 물을 " + waterCount + "병 넣었습니다.");
+                break; // 성공적으로 물을 추가하면 루프를 종료
+            } catch (NumberFormatException e) {
+                System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -175,15 +196,51 @@ public class FridgeMenu {
     }
 
     // 물 꺼내먹기
+//    private void eatWater() {
+//        try {
+//        	int waterCnt = fridgeService.getWaterCnt();
+//            System.out.print("꺼낼 물의 양 입력 (병) : ");
+//            int waterCount = Integer.parseInt(sc.nextLine());
+//            
+//            fridgeService.spendWater(waterCount);
+//        } catch (NumberFormatException e) {
+//            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
+//        } catch (IllegalArgumentException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
     private void eatWater() {
-        try {
-            System.out.print("꺼낼 물의 양 입력 (병) : ");
-            int waterCount = Integer.parseInt(sc.nextLine());
-            fridgeService.spendWater(waterCount);
-        } catch (NumberFormatException e) {
-            System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        int waterCnt = fridgeService.getWaterCnt();
+
+        if (waterCnt == 0) {
+            System.out.println("냉장고에 물이 없습니다.");
+            return; // 물이 없으므로 메서드를 즉시 종료
+        }
+        
+        while (true) {
+            try {
+                System.out.print("꺼낼 물의 양 입력 (병) : ");
+                int waterCount = Integer.parseInt(sc.nextLine());
+
+                if (waterCount <= 0) {
+                    System.out.println("0보다 큰 숫자를 입력하세요.");
+                    continue;
+                }
+
+                if (waterCount > waterCnt) {
+                    System.out.println("냉장고에 물이 부족합니다. 현재 " + waterCnt + "병 있습니다.");
+                    continue;
+                }
+
+                fridgeService.spendWater(waterCount);
+                System.out.println(waterCount + "병의 물을 꺼냈습니다.");
+                break;
+
+            } catch (NumberFormatException e) {
+                System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
