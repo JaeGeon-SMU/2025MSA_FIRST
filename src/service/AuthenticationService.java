@@ -42,6 +42,10 @@ public class AuthenticationService {
         if (userRepo.findById(signUpInfo.getUserId()) != null) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
+        
+        if (!isValidPassword(signUpInfo.getPassword())) {
+            throw new IllegalArgumentException("비밀번호는 8글자 이상, 특수문자 포함이어야 합니다.");
+        }
 
         String salt = SHA256PasswordSecurity.generateSalt();
         String hash = SHA256PasswordSecurity.hashPassword(signUpInfo.getPassword(), salt);
@@ -67,6 +71,10 @@ public class AuthenticationService {
 
     public User findById(String id) {
         return userRepo.findById(id);
+    }
+    
+    private boolean isValidPassword(String pw) {
+        return pw.matches("^(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$");
     }
 
     // ---------- 내부 유틸 ----------

@@ -148,4 +148,10 @@ public class User implements Serializable {
     public void setFridge(Fridge fridge) {
         this.fridge = fridge;
     }
+
+    public void setPassword(String passwordHash, String passwordSalt) {
+        this.passwordHash = passwordHash;
+        this.passwordSalt = passwordSalt;
+    }
+
 }
