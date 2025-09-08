@@ -30,8 +30,7 @@ public class AuthMenu {
             else if (sel == 2) {
                 User user = login();
                 if (user != null) {
-                    System.out.println("로그인 성공");
-                    userService.notifyEmergencyDay(user);
+                    System.out.println("로그인 중......\n");
                     return user;
                 } else {
                     System.out.println("로그인 실패");

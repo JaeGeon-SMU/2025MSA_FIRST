@@ -39,7 +39,7 @@ public class UserService {
         List<Food> yesterdayFoodList = user.getEatingHistory().getOrDefault(LocalDate.now().minusDays(1), null);
         DailyGoalInfo yesterdayGoal = user.getGoalHistory().getOrDefault(LocalDate.now().minusDays(1), null);
         if(yesterdayFoodList != null && yesterdayFoodList.size() < yesterdayGoal.getMinMeal()) {
-            System.out.println("====오늘은 비상데이 입니다=====");
+            System.out.println("\t============오늘은 비상데이 입니다=============");
         }
     }
     // ====== 업데이트 메서드들 ======
@@ -356,7 +356,7 @@ public class UserService {
         // 목표 달성량 남은 부분: 초록색
         for (int i = filledLength; i < barLength; i++) bar.append(GREEN).append("-");
 
-        bar.append(RESET).append(" | 목표: ").append(target);
+        bar.append(RESET).append("| 현재 : ").append(current).append(", 목표 : ").append(target);
 
         // 초과량: 빨강
         if (current > target) {
