@@ -75,8 +75,12 @@ public class FridgeMenu {
                     saveUser();
                     break;
                 case 11:
-                    System.out.println("음식 추천 기능은 아직 구현되지 않았습니다.");
+                		fridgeService.recommend(); //음식 추천 받기
                     break;
+                case 12:
+                		//냉장고 물 수량 확인하기
+                		System.out.printf("냉장고 물 수량: %d\n", fridgeService.getWaterCnt());
+                		break;
                 case 0:
                     System.out.println("냉장고 문을 닫습니다.");
                     running = false;
@@ -101,6 +105,7 @@ public class FridgeMenu {
         System.out.println("9. 칼로리 높은 음식 보기");
         System.out.println("10. 최소 수량 알림받는 기능 설정하기");
         System.out.println("11. 음식 추천 받기");
+        System.out.println("12. 냉장고 물 수량 확인");
         System.out.println("0. 종료");
         System.out.print("선택: ");
     }
@@ -132,7 +137,7 @@ public class FridgeMenu {
             System.out.print("물 개수 입력 : ");
             int waterCount = Integer.parseInt(sc.nextLine());
             fridgeService.addWater(waterCount);
-            System.out.println("냉장고에 물을 " + waterCount + "ml 넣었습니다.");
+            System.out.println("냉장고에 물을 " + waterCount + "병 넣었습니다.");
         } catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
@@ -175,10 +180,9 @@ public class FridgeMenu {
     // 물 꺼내먹기
     private void eatWater() {
         try {
-            System.out.print("꺼낼 물의 양 입력 (ml) : ");
+            System.out.print("꺼낼 물의 양 입력 (병) : ");
             int waterCount = Integer.parseInt(sc.nextLine());
             fridgeService.spendWater(waterCount);
-            System.out.println("냉장고에서 물을 " + waterCount + "ml 꺼내 먹었습니다.");
         } catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
