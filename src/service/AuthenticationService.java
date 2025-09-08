@@ -25,7 +25,7 @@ public class AuthenticationService {
         if (id == null || id.isBlank() || password == null) return null;
 
         User user = userRepo.findById(id);
-        if (user == null) return null;
+        if (user == null) return null;;
 
         boolean ok = SHA256PasswordSecurity.verifyPassword(
                 password,

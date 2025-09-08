@@ -11,6 +11,7 @@ import domain.User;
 import domain.enums.Allergy;
 import repo.UserRepo;
 import util.OutFormat;
+import util.SHA256PasswordSecurity;
 import util.enums.Labels;
 
 public class UserService {
@@ -430,4 +431,107 @@ public class UserService {
         System.out.printf("%-3s %-20s %8d kcal %8d g%n", "", "합계", totalCal, totalProtein);
         System.out.println();
     }
+    
+ // UserService 안에 추가
+
+ // 1) 한 달치 달력 테스트까지 되는 더미 유저 생성 & 저장
+ public User createDummyUserWithFridgeAndMonthData() {
+     String userId = "gihyeon";
+     String rawPassword = "1234";
+
+     // 비밀번호 해시 & 솔트
+     String salt = SHA256PasswordSecurity.generateSalt();
+     String hash = SHA256PasswordSecurity.hashPassword(rawPassword, salt);
+
+     User user = new User(
+             userId,
+             hash,
+             salt,
+             47.0,    // currentWeight
+             50.0,    // targetWeight
+             50,      // targetProtein
+             1200,    // targetCalories
+             3,       // minMeal
+             2003,    // birthYear
+             162.0,   // height
+             1500,    // targetWater
+             List.of(Allergy.SHRIMP)
+     );
+
+     // 냉장고 시딩 (putFood 사용)
+     seedFridge(user);
+
+     // 이번 달 기록 시딩 (목표/섭취/물)
+     seedCurrentMonth(user);
+
+     // 저장
+     userRepo.save(user);
+     return user;
+ }
+
+ // 2) 냉장고에 더미 음식 채우기 (FridgeService.putFood 사용)
+ private void seedFridge(User user) {
+     FridgeService fs = new FridgeService(user);
+
+     fs.putFood("chickenBreast",    8);
+     fs.putFood("rice",             6);
+     fs.putFood("cupNoodle",        4);
+     fs.putFood("stirNodle",        2);
+     fs.putFood("basilBagle",       3);
+     fs.putFood("creamCheeseBagle", 2);
+     fs.putFood("kimchiDumpling",   5);
+     fs.putFood("meatDumpling",     5);
+     fs.putFood("mackerel",         3);
+     fs.putFood("omlet",            6);
+     fs.putFood("proteinBar",       10);
+
+     // 선택) 리오더 포인트
+     try {
+         fs.setReorderPoint("chickenBreast", 5);
+         fs.setReorderPoint("rice",          3);
+         fs.setReorderPoint("proteinBar",    4);
+     } catch (IllegalArgumentException ignored) {}
+ }
+
+ // 3) 이번 달 달력용 데이터 한 번에 채우기
+//     - 매일 DailyGoalInfo 생성 (User 기반)
+//     - 3일마다 목표 달성하도록 음식/물 충족시킴 → 달력에서 OOO 찍히도록
+ private void seedCurrentMonth(User user) {
+	    // 오늘 날짜
+	    LocalDate today = LocalDate.now();
+	    // 이번 달의 1일
+	    LocalDate first = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
+	    // 이번 달 마지막 날짜
+	    int lastDay = first.lengthOfMonth();
+
+	    for (int d = 1; d <= lastDay; d++) {
+	        LocalDate day = first.withDayOfMonth(d);
+
+	        // 목표 생성
+	        DailyGoalInfo goal = new DailyGoalInfo(user);
+	        user.getGoalHistory().put(day, goal);
+
+	        // 섭취 음식 리스트
+	        List<Food> foods = new java.util.ArrayList<>();
+
+	        // 규칙: 3일마다 달성 (칼로리/단백질/물 충족)
+	        boolean achieve = (d % 3 == 0);
+
+	        if (achieve) {
+	            foods.add(new domain.food.homeFood.Rice());
+	            foods.add(new domain.food.homeFood.ChickenBreast());
+	            foods.add(new domain.food.homeFood.Omlet());
+	            foods.add(new domain.food.homeFood.ProteinBar());
+	            // 물 달성
+	            goal.setCurrentWater(goal.getTargetWater());
+	        } else {
+	            foods.add(new domain.food.homeFood.Rice());
+	            foods.add(new domain.food.homeFood.ChickenBreast());
+	            // 물 절반만
+	            goal.setCurrentWater(goal.getTargetWater() / 2);
+	        }
+
+	        user.getEatingHistory().put(day, foods);
+	    }
+	}
 }
