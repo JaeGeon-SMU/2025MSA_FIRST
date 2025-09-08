@@ -40,6 +40,7 @@ public class FridgeService extends recommendTemplate{
 	public void putFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
 		
+		/*
 		HomeFood homeFood = foodFactory.createHomeFood(name);
 		
 		if(queue==null && homeFood!=null) {
@@ -52,7 +53,22 @@ public class FridgeService extends recommendTemplate{
 			if(homeFood != null) queue.add(homeFood);
 			System.out.println("냉장고에 " + name + "을 " + count + "개 넣었습니다.");
 		}
-				
+		*/
+		
+		HomeFood homeFood = foodFactory.createHomeFood(name);
+		if(homeFood == null) {
+			System.out.println("넣을 수 없는 음식입니다."); 
+			return;
+		}else if(queue==null) {
+			queue = new LinkedList<>();
+			fridge.getFoodList().put(name, queue);	
+		}
+		
+		for(int i=0; i<count; i++) {
+			//개수만큼 음식 추가
+			if(homeFood != null) queue.add(homeFood);
+		}
+		System.out.println("냉장고에 " + name + "을 " + count + "개 넣었습니다.");
 	}
 
 	
