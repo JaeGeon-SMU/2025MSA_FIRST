@@ -1,4 +1,4 @@
-package service;
+package service.template;
 
 import java.util.List;
 

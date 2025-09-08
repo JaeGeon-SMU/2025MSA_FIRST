@@ -1,4 +1,4 @@
-package service;
+package domain.comparator;
 
 import java.util.Comparator;
 import java.util.Map;
