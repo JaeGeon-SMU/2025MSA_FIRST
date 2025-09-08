@@ -40,14 +40,14 @@ public class FridgeService extends recommendTemplate{
 	public void putFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
 		
-		if(queue==null) {
+		HomeFood homeFood = foodFactory.createHomeFood(name);
+		
+		if(queue==null && homeFood!=null) {
 			queue = new LinkedList<>();
 			fridge.getFoodList().put(name, queue);			
 		}
 		
 		for(int i=0; i<count; i++) {
-			HomeFood homeFood = foodFactory.createHomeFood(name);
-			
 			//개수만큼 음식 추가
 			if(homeFood != null) queue.add(homeFood);
 		}
