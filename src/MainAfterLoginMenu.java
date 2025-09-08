@@ -101,7 +101,7 @@ public class MainAfterLoginMenu {
     }
 
     private void inputExerciseCalories() {
-        System.out.println("오늘의 운동 칼로리를 입력해주세요 (0 이상의 정수)");
+    	System.out.println("오늘의 운동 칼로리를 입력해주세요 (예: 300, 500, 1000)");
         System.out.println("현재 운동 칼로리: " + user.getExerciseCarlories());
 
         while (true) {
