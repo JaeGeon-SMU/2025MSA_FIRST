@@ -297,12 +297,19 @@ public class FridgeService extends recommendTemplate{
 	 * 남은 음식 수량이 최소 필요 개수보다 낮을 시 경고를 출력
 	 */
 	public void checkFood(String name) {
-		
-		Queue<Food> queue = fridge.getFoodList().get(name);
-		if(queue!=null && (queue.size() <= ((HomeFood)(queue.peek())).getReorderPoint())) {
-			System.out.println("최소 수량 이하입니다.");
-		}
-		
+	    Queue<Food> queue = fridge.getFoodList().get(name);
+
+	    if (queue != null) {
+	        HomeFood food = (HomeFood) queue.peek();
+	        int currentCount = queue.size();
+	        int reorderPoint = food.getReorderPoint();
+
+	        if (currentCount <= reorderPoint) {
+	            System.out.println(name + "의 남은 수량: " + currentCount 
+	                + "개, 최소 수량: " + reorderPoint 
+	                + "개 이하입니다. 추가 주문 잊지말고 해주세요 ~~!");
+	        }
+	    }
 	}
 	
 	/*

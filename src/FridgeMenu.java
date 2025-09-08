@@ -86,6 +86,8 @@ public class FridgeMenu {
             int foodCount = Integer.parseInt(sc.nextLine());
             
             fridgeService.putFood(foodName, foodCount);
+            System.out.print("냉장고에 " + foodName + "을 " + foodCount + " 개 넣었습니다.");
+    	
     	} catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
@@ -100,6 +102,8 @@ public class FridgeMenu {
             int waterCount = Integer.parseInt(sc.nextLine());
             
             fridgeService.addWater(waterCount);
+            System.out.print("냉장고에 물을 " + waterCount + " ml 넣었습니다.");
+    	
     	} catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
@@ -117,6 +121,8 @@ public class FridgeMenu {
             int foodCount = Integer.parseInt(sc.nextLine());
             
             fridgeService.deleteFood(foodName, foodCount);
+            System.out.print("냉장고에 " + foodName + "을 " + foodCount + " 개 " + "꺼냈습니다.");
+            
     	} catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
@@ -131,6 +137,8 @@ public class FridgeMenu {
             String foodName = sc.nextLine();
             
             fridgeService.eatFood(foodName);
+            System.out.print("냉장고에 " + foodName + "을 꺼내 먹었습니다.");
+            
     	} catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
@@ -145,6 +153,8 @@ public class FridgeMenu {
             int waterCount = Integer.parseInt(sc.nextLine());
             
             fridgeService.spendWater(waterCount);
+            System.out.print("냉장고에서 물을 " + waterCount + "ml 꺼내 먹었습니다.");
+            
     	} catch (NumberFormatException e) {
             System.out.println("숫자 형식이 잘못되었습니다. 다시 시도하세요.");
         } catch (IllegalArgumentException e) {
