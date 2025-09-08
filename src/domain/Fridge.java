@@ -14,7 +14,7 @@ public class Fridge implements Serializable{
 		return this.foodList;
 	}
 	
-	// 생성자 추가 (소희)
+	// 생성자 추가
 	public Fridge() {
 		this.foodList = new HashMap<>();
 		this.waterCnt = 0; // 초기 물 개수는 0으로 설정

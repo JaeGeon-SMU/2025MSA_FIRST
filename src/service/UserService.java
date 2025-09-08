@@ -324,4 +324,57 @@ public class UserService {
         user.setExerciseCarlories(kcal);
         userRepo.save(user);
     }
+    
+    public void viewDailyEatingFoodList(User user) {
+    	LocalDate today = LocalDate.now();
+
+        List<Food> list = (user != null && user.getEatingHistory() != null)
+                ? user.getEatingHistory().get(today)
+                : null;
+
+        if (list == null || list.isEmpty()) {
+            System.out.println("오늘 먹은 음식이 없습니다!");
+            return;
+        }
+
+        System.out.println();
+        System.out.printf("==== %s 오늘 먹은 음식 (%d건) ====%n", today, list.size());
+        String line = "---------------------------------------------------------------------";
+        System.out.println(line);
+        System.out.printf("%-3s %-20s %10s %10s  %s%n", "No", "이름", "칼로리", "단백질", "알레르기");
+        System.out.println(line);
+
+        int totalCal = 0;
+        int totalProtein = 0;
+        int idx = 1;
+
+        for (Food food : list) {
+            if (food == null) continue;
+
+            totalCal += food.getCalorie();
+            totalProtein += food.getProtein();
+
+            // 알레르기 문자열 만들기 (메서드 없이 바로)
+            String allergies;
+            if (food.getAllergy() == null || food.getAllergy().isEmpty()) {
+                allergies = "없음";
+            } else {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < food.getAllergy().size(); i++) {
+                    sb.append(food.getAllergy().get(i) == null ? "-" : food.getAllergy().get(i).name());
+                    if (i < food.getAllergy().size() - 1) sb.append(", ");
+                }
+                allergies = sb.toString();
+            }
+
+            String name = (food.getName() == null || food.getName().trim().isEmpty()) ? "-" : food.getName();
+
+            System.out.printf("%-3d %-20s %8d kcal %8d g  %s%n",
+                    idx++, name, food.getCalorie(), food.getProtein(), allergies);
+        }
+
+        System.out.println(line);
+        System.out.printf("%-3s %-20s %8d kcal %8d g%n", "", "합계", totalCal, totalProtein);
+        System.out.println();
+    }
 }

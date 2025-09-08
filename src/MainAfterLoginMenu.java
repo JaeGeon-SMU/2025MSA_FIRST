@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
-import domain.DailyGoalInfo;
 import domain.User;
+import service.FridgeService;
 import service.UserService;
 
 public class MainAfterLoginMenu {
@@ -18,7 +18,7 @@ public class MainAfterLoginMenu {
     public void run() {
         userService.notifyEmergencyDay(user);
 
-        // 오늘 기록 보장(유지하고 싶으면 남기고, 불필요하면 제거 가능)
+        // 오늘 기록 보장 (원하면 유지)
         user.ensureTodayInfo();
         userService.saveUser(user);
 
@@ -38,6 +38,10 @@ public class MainAfterLoginMenu {
             System.out.println("4. 냉장고 관리 (예정)");
             System.out.println("5. 이번 달 통계 보기");
             System.out.println("6. 로그아웃 / 종료");
+            System.out.println("4. 오늘 먹은 음식 보기");   // ★ 추가
+            System.out.println("5. 냉장고 관리");
+            System.out.println("6. 이번 달 통계 보기");
+            System.out.println("7. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
             System.out.print("선택: ");
 
             String in = sc.nextLine().trim();
@@ -56,27 +60,33 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 2: {
-                    inputExerciseCalories();
+                    inputExerciseCalories(); 
                     break;
                 }
                 case 3: {
                     userService.viewMemberInfo(user);
                     break;
                 }
-                case 4: {
-                    System.out.println("냉장고 관리는 추후 구현 예정입니다.");
+                case 4: { 
+                    userService.viewDailyEatingFoodList(user);
                     break;
                 }
                 case 5: {
-                	userService.checkMonthlyGoal(user);
+                	  FridgeService fridgeService = new FridgeService(user);
+                    FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, sc);
+                    fridgeMenu.start();
                     break;
                 }
                 case 6: {
+                    userService.checkMonthlyGoal(user);
+                    break;
+                }
+                case 7: {
                     System.out.println("로그아웃합니다. 안녕!");
                     return;
                 }
                 default: {
-                    System.out.println("1~6 중에서 선택하세요.");
+                    System.out.println("1~7 중에서 선택하세요.");
                     break;
                 }
             }
@@ -84,7 +94,6 @@ public class MainAfterLoginMenu {
     }
 
     private void inputExerciseCalories() {
-        // 현재 값 먼저 보여주기
         System.out.println("오늘의 운동 칼로리를 입력해주세요 (0 이상의 정수)");
         System.out.println("현재 운동 칼로리: " + user.getExerciseCarlories());
 
@@ -93,16 +102,19 @@ public class MainAfterLoginMenu {
             String input = sc.nextLine().trim();
             try {
                 int exerciseCalories = Integer.parseInt(input);
+                if (exerciseCalories < 0) {
+                    System.out.println("0 이상의 정수를 입력하세요.");
+                    continue;
+                }
 
-                // ⬇⬇⬇ 서비스로 위임 ⬇⬇⬇
-                userService.updateExerciseCalories(user, exerciseCalories);
+                // 직접 업데이트 + 저장 (Service 래퍼 안 씀)
+                user.setExerciseCarlories(exerciseCalories);
+                userService.saveUser(user);
 
                 System.out.println("운동 칼로리 저장 완료! 현재 값: " + user.getExerciseCarlories());
                 return;
             } catch (NumberFormatException e) {
                 System.out.println("숫자만 입력하세요.");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
             }
         }
     }

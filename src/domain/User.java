@@ -20,11 +20,11 @@ public class User implements Serializable {
     private int minMeal;
     private int birthYear;
     private double height;
-    private int targetWater; // 목표 물 량
+    private int targetWater; // 목표 물 량(ml)
     private List<Allergy> allergy;
     private Map<LocalDate, List<Food>> eatingHistory;
     private Map<LocalDate, DailyGoalInfo> goalHistory;
-    private int exerciseCarlories; // (오타 유지 중)
+    private int exerciseCarlories; 
     private Fridge fridge;
     private String userId; // 로그인 용
     private String password;
@@ -141,7 +141,7 @@ public class User implements Serializable {
 
     public void setExerciseCarlories(int excerciseCarlories) {
         this.exerciseCarlories = excerciseCarlories;
-        // DailyGoalInfo에 운동 칼로리 기록을 안 쓰기로 했으므로 갱신 없음
+        ensureTodayInfo().setExerciseCarlories(excerciseCarlories);
     }
 
     public void setFridge(Fridge fridge) {
