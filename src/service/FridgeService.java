@@ -334,10 +334,10 @@ public class FridgeService extends recommendTemplate{
 			list = new ArrayList<Food>();
 			user.getEatingHistory().put(LocalDate.now(), list);
 		}
-	
 		checkFood(name);
 		Food remove = queue.remove();
 		list.add(remove);
+		System.out.println("냉장고에서 " + name + "을 꺼내 먹었습니다.");
 	}
 	
 	
