@@ -1,8 +1,11 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class Food {
+import domain.enums.Allergy;
+
+public abstract class Food implements Serializable{
 	int id; //음식 id
 	String name; //음식 이름
 	int calorie; //칼로리

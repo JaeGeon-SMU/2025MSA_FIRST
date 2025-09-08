@@ -1,4 +1,4 @@
-package domain;
+package util;
 
 public class OutFormat{
 	public void print(String labels, String context) {

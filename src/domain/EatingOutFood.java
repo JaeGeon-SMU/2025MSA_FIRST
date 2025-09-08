@@ -3,6 +3,8 @@ package domain;
 import java.time.LocalDate;
 import java.util.List;
 
+import domain.enums.Allergy;
+
 public class EatingOutFood extends Food {
 
 	private int price; //가격
