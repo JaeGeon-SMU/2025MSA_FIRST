@@ -13,5 +13,14 @@ public class EatingOutFood extends Food {
 		super(name, calorie, protein, allergy);
 		this.price = price;
 	}
+	
+	public int getPrice() {
+		return this.price;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ", price: " + this.price;
+	}
 
 }
