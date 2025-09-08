@@ -9,7 +9,7 @@ import domain.enums.Allergy;
 public class BasilBagle extends HomeFood {
 	
 	public BasilBagle(){
-		super("creamCheeseBagle", 
+		super("basilBagle", 
 				395, 
 				12, 
 				List.of(Allergy.EGGS, Allergy.MILK, Allergy.SOYBEAN, 
