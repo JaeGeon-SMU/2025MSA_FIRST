@@ -36,21 +36,23 @@ public class MainAfterLoginMenu {
             System.out.println();
             userService.checkWeeklyGoal(user);
             System.out.println(this.quotes);
-            System.out.println("사용자 : " + user.getUserId());
+            System.out.println("\t 사용자\t\t: " + user.getUserId());
+            System.out.println();
             userService.checkDailyCalories(user);
             userService.checkDailyProtein(user);
             userService.checkDailyWater(user);
             System.out.println();
-            System.out.println("==== 메인 메뉴 ====");
-            System.out.println("1. 유저 정보 수정");
-            System.out.println("2. 오늘 운동 칼로리 입력");
-            System.out.println("3. 회원 정보 보기");
-            System.out.println("4. 오늘 먹은 음식 보기");
-            System.out.println("5. 냉장고 관리");
-            System.out.println("6. 이번 달 통계 보기");
-            System.out.println("7. AI 요약");
-            System.out.println("8. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
-            System.out.print("선택: ");
+            System.out.println("\t============ 메인 메뉴 ============");
+            System.out.println("\t\t1. 유저 정보 수정");
+            System.out.println("\t\t2. 오늘 운동 칼로리 입력");
+            System.out.println("\t\t3. 회원 정보 보기");
+            System.out.println("\t\t4. 오늘 먹은 음식 보기");
+            System.out.println("\t\t5. 냉장고 관리");
+            System.out.println("\t\t6. 이번 달 통계 보기");
+            System.out.println("\t\t7. AI 요약");
+            System.out.println("\t\t8. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
+            System.out.println();
+            System.out.print("\t\t선택: ");
 
             String in = sc.nextLine().trim();
             int sel;
