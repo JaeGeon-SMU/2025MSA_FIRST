@@ -151,7 +151,7 @@ public class FridgeService extends recommendTemplate{
 	    // 각 Queue의 맨 앞 음식 1개만 리스트에 담기
 	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
 	            .map(queue -> (HomeFood) queue.peek())  // 맨 앞 1개만
-	            .filter(Objects::nonNull)              // 혹시 null 방지
+	            .filter(Objects::nonNull)               // 혹시 null 방지
 	            .collect(Collectors.toList());
 
 	    // 병합 정렬로 Protein 기준 정렬
@@ -227,11 +227,12 @@ public class FridgeService extends recommendTemplate{
 	        return;
 	    }
 
-	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    // 각 Queue의 맨 앞 음식 1개만 리스트에 담기
 	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
-	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
-	            .collect(java.util.stream.Collectors.toList());
-
+	            .map(queue -> (HomeFood) queue.peek())  // 맨 앞 1개만
+	            .filter(Objects::nonNull)               // 혹시 null 방지
+	            .collect(Collectors.toList());
+	            
 	    // 힙 정렬로 Calorie 기준 정렬
 	    List<HomeFood> sortedFoods = heapSort(allFoods);
 	    
@@ -366,6 +367,12 @@ public class FridgeService extends recommendTemplate{
         fridge.setWaterCnt(fridge.getWaterCnt() + count);
 	}
 	
+	/*
+	 * 물 개수 확인 함수
+	 */
+	public void getWaterCnt() {
+		System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+	}
 
 	
 	
