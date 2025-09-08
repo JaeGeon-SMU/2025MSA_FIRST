@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 import domain.Food;
 import domain.FoodFactory;
@@ -93,7 +95,7 @@ public class FridgeService extends recommendTemplate{
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== ⏰ 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 유통기한 임박 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
@@ -146,10 +148,11 @@ public class FridgeService extends recommendTemplate{
 	        return;
 	    }
 
-	    // 모든 Queue<Food> 꺼내서 List<HomeFood> 로 변환
+	    // 각 Queue의 맨 앞 음식 1개만 리스트에 담기
 	    List<HomeFood> allFoods = fridge.getFoodList().values().stream()
-	            .flatMap(queue -> queue.stream().map(food -> (HomeFood) food))
-	            .collect(java.util.stream.Collectors.toList());
+	            .map(queue -> (HomeFood) queue.peek())  // 맨 앞 1개만
+	            .filter(Objects::nonNull)              // 혹시 null 방지
+	            .collect(Collectors.toList());
 
 	    // 병합 정렬로 Protein 기준 정렬
 	    List<HomeFood> sortedFoods = mergeSort(allFoods);
@@ -158,7 +161,7 @@ public class FridgeService extends recommendTemplate{
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 🍗 단백질 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 단백질 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
@@ -236,7 +239,7 @@ public class FridgeService extends recommendTemplate{
 	    int displayCount = sortedFoods.size() < 5 ? sortedFoods.size() : sortedFoods.get(0).getSortreorderPoint();
 
 	    // 콘솔 출력
-	    System.out.println("=== 🍫 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
+	    System.out.println("=== 칼로리 높은 순 정렬 결과 (상위 " + displayCount + "개) ===");
 	    for (int i = 0; i < displayCount; i++) {
 	        System.out.println(sortedFoods.get(i));
 	    }
