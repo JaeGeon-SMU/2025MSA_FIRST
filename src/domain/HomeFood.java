@@ -35,5 +35,10 @@ public class HomeFood extends Food implements Serializable{
 		return super.toString() + ", exp: " + this.expireDate;
 	}
 
+
+	public void setReorderPoint(int reorderPoint) {
+	    this.reorderPoint = reorderPoint;
+	}
+
 	
 }
