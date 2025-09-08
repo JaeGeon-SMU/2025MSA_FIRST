@@ -349,11 +349,14 @@ public class FridgeService extends recommendTemplate{
 	 */
 	public void deleteFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
-		if(queue!=null) {
+		if(queue!=null && fridge.getFoodList().get(name).size() >= count) {
 			for(int i=0; i<count; i++) {
 				//개수만큼 음식 삭제
 				queue.poll();
+				System.out.println("냉장고에서 " + name + "을 " + count + "개 꺼냈습니다.");
 			}
+		}else {
+			System.out.println(name + "의 수량이 " + count + "보다 적습니다.");
 		}
 		
 	}
