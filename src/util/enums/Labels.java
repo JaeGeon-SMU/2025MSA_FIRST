@@ -15,7 +15,8 @@ public enum Labels{
 	CHECKEXERCISECALORIES("오늘 소모한 칼로리 : "),
 	MINMEAL("최소 끼니 수 : "),
     ALLERGIES("알레르기 : "),
-	CHECKPROTEIN("오늘 목표로 해야 할 단백질 섭취량 : ");
+	CHECKPROTEIN("오늘 목표로 해야 할 단백질 섭취량 : "),
+	CHECKWATER("오늘 목표로 해야 할 물 섭취량 : ");
 	
 	
 	private final String value;

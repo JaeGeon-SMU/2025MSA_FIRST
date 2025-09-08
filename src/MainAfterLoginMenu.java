@@ -24,12 +24,19 @@ public class MainAfterLoginMenu {
 
         while (true) {
             System.out.println();
+           
+            userService.checkWeeklyGoal(user);
+            System.out.println("사용자 : " + user.getUserId());
+            userService.checkDailyCalories(user);
+            userService.checkDailyProtein(user);
+            userService.checkDailyWater(user);
+            System.out.println();
             System.out.println("==== 메인 메뉴 ====");
             System.out.println("1. 유저 정보 수정");
             System.out.println("2. 오늘 운동 칼로리 입력");
             System.out.println("3. 회원 정보 보기");
             System.out.println("4. 냉장고 관리 (예정)");
-            System.out.println("5. 통계 보기 (예정)");
+            System.out.println("5. 이번 달 통계 보기");
             System.out.println("6. 로그아웃 / 종료");
             System.out.print("선택: ");
 
@@ -61,7 +68,7 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 5: {
-                    System.out.println("통계 보기는 추후 구현 예정입니다.");
+                	userService.checkMonthlyGoal(user);
                     break;
                 }
                 case 6: {
