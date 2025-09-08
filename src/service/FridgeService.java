@@ -362,7 +362,7 @@ public class FridgeService {
 	/*
 	 * 음식 추천 함수
 	 * 알레르기, 칼로리, 단백질 등을 고려하여 해당하는 음식을 출력
-	 * 유통기한 임박, 영양 목표 근접을 기준으로 상위 5개 추천
+	 * 유통기한 임박, 단백질 높음, 칼로리 높음을 기준으로 상위 3개 추천
 	 */
 	public void recommend() {
 		
@@ -383,7 +383,7 @@ public class FridgeService {
 				
 				//유통기한 지난 음식 제외
 				LocalDate exp = homeFood.getExpireDate();
-				if(exp!=null && exp.isBefore(today)) continue;
+				if(exp!=null && exp.isBefore(LocalDate.now())) continue;
 				
 				//알레르기 해당하는 음식 제외
 				if(checkAllergy(user, homeFood)) continue;
@@ -405,7 +405,8 @@ public class FridgeService {
 		//점수 계산
 		Map<HomeFood, Double> scoreMap = new HashMap<>();
 		for(HomeFood homeFood : foodCandidates) {
-			double score = scoring(homeFood, today, mealCalories, mealProtein);
+			//double score = scoring(homeFood, today, mealCalories, mealProtein);
+			double score = scoring(homeFood, mealCalories, mealProtein);
 			scoreMap.put(homeFood, score);
 		}		
 		
@@ -447,6 +448,44 @@ public class FridgeService {
 	 * 단백질과 칼로리는 높을수록 가점
 	 * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
 	 */
+	private double scoring(Food food, int mealCalories, int mealProtein) {
+		
+		double score = 0.0;
+		HomeFood homeFood = (HomeFood)food;		
+		
+		//유통기한 점수 계산
+		long daysLeft = 1000;
+		LocalDate exp = homeFood.getExpireDate();
+		if(exp!=null) {
+			daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), exp);
+			if(daysLeft<0) daysLeft = 0;
+		}
+		score += 100.0/(daysLeft+1.0);
+		
+		//칼로리 점수 계산
+		int calTarget = (mealCalories>0) ? mealCalories : 1;
+		double calRatio = homeFood.getCalorie() / (double) calTarget;
+		double calCapped = Math.min(calRatio, 2.0); //상한
+		double calweight = 10.0; //가중치
+		score += calweight*calCapped;
+		
+		//단백질 점수 계산
+		int proTarget = (mealProtein>0) ? mealProtein : 1;
+		double proRatio = homeFood.getProtein() / (double) proTarget;
+		double proCapped = Math.min(proRatio, 2.0); //상한
+		double proweight = 20.0; //가중치
+		score += proweight*proCapped;
+		
+		//최종 점수 반환
+		return score;		
+	}
+	
+	/*
+	 * 음식 점수 계산 함수
+	 * 유통기한: 임박할수록 가점
+	 * 단백질과 칼로리는 높을수록 가점
+	 * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
+	 
 	private double scoring(HomeFood homeFood, LocalDate today, int mealCalories, int mealProtein) {
 		
 		double score = 0.0;
@@ -477,6 +516,8 @@ public class FridgeService {
 		//최종 점수 반환
 		return score;		
 	}
+	*/
+
 	
 	/*
 	 * 물 먹는 함수
@@ -520,7 +561,6 @@ public class FridgeService {
 	    }
 	    return null;
 	}
-
 
 
 }
