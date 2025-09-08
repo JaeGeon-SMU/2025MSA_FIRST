@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import domain.Allergy;
+
 import domain.Food;
 import domain.HomeFood;
 import domain.User;
+import domain.enums.Allergy;
 import service.FridgeService;
 
 public class FridgeTest {
