@@ -366,8 +366,9 @@ public class FridgeService extends recommendTemplate{
 	/*
 	 * 물 개수 확인 함수
 	 */
-	public void getWaterCnt() {
-		System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+	public int getWaterCnt() {
+		//System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
+		return fridge.getWaterCnt();
 	}
 
 	
@@ -532,19 +533,17 @@ public class FridgeService extends recommendTemplate{
 		return score;		
 	}
 	*/
-
 	
 	/*
 	 * 물 먹는 함수
 	 */
-	public void spendWater(int ml) {
+	public void spendWater(int drinkWater) {
 		int waterCnt = fridge.getWaterCnt();
-		if(waterCnt<1) {
-			System.out.println("냉장고에 물이 없습니다!");
-		}else {
-			fridge.setWaterCnt(waterCnt-1);
-			user.getGoalHistory().get(LocalDate.now()).addCurrentWater(500);
-		}
+		if(waterCnt >= drinkWater) {
+			fridge.setWaterCnt(waterCnt-drinkWater);
+			user.getGoalHistory().get(LocalDate.now()).addCurrentWater(500*drinkWater);
+    			System.out.println("냉장고에서 물을 " + drinkWater + "병 꺼내 먹었습니다.");
+		}else System.out.println("냉장고에 충분한 물이 없습니다.\n남은 물의 수량: " + waterCnt + "병");
 	}
 	
 	/*

@@ -30,7 +30,6 @@ public class App {
                 System.out.println("프로그램 종료");
                 return;
             }
-       
 
             // 로그인 성공 후 메인 메뉴로 이동
             FridgeService fridgeService = new FridgeService(user);
