@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import domain.User;
+import service.FridgeService;
 import service.UserService;
 
 public class MainAfterLoginMenu {
@@ -28,7 +29,7 @@ public class MainAfterLoginMenu {
             System.out.println("2. 오늘 운동 칼로리 입력");
             System.out.println("3. 회원 정보 보기");
             System.out.println("4. 오늘 먹은 음식 보기");   // ★ 추가
-            System.out.println("5. 냉장고 관리 (예정)");
+            System.out.println("5. 냉장고 관리");
             System.out.println("6. 통계 보기 (예정)");
             System.out.println("7. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
             System.out.print("선택: ");
@@ -61,7 +62,9 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 5: {
-                    System.out.println("냉장고 관리는 추후 구현 예정입니다.");
+                	FridgeService fridgeService = new FridgeService(user);
+                    FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, sc);
+                    fridgeMenu.start();
                     break;
                 }
                 case 6: {
