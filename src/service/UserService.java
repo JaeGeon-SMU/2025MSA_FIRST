@@ -32,7 +32,6 @@ public class UserService {
         String allergies = (user.getAllergy() == null || user.getAllergy().isEmpty()) ? "없음" : user.getAllergy().toString();
         of.print(Labels.ALLERGIES.getValue(),               allergies);
     }
-
     //전날 최소 먹어야 하는 끼니보다 적게 먹은 경우 비상데이 알림
     public void notifyEmergencyDay(User user) {
         List<Food> yesterdayFoodList = user.getEatingHistory().getOrDefault(LocalDate.now().minusDays(1), null);
@@ -41,26 +40,6 @@ public class UserService {
             System.out.println("====오늘은 비상데이 입니다=====");
         }
     }
-    /*
-    //목표 칼로리 - 현재 섭취량(for문 합산 , List<Food>) 
-    void checkDailyDiet(User user) {
-        int eatedTotalCalories = 0;
-        //List<Food> 형태 필요
-        for(Food food : user.getEatList()) {
-            eatedTotalCalories += food.calorie;
-        }
-        of.print(Labels.CHECKCALORIES.getValue() , (user.getTargetCalories()-eatedTotalCalories) );
-    }
-    //목표 단백질 - 현재 섭취량(for문 합산 , List<Food>)
-    void checkDailyProtein(User user){
-        int eatedTotalProtein = 0;
-        for(Food food : user.getEatList()) {
-            eatedTotalProtein += food.calorie;
-        }
-        of.print(Labels.TARGETPROTEIN.getValue() , (user.getTargetProtein()-eatedToalProtein );       
-    }
-    */
-
     // ====== 업데이트 메서드들 ======
     public void updateCurrentWeight(User user, double kg) {
         if (kg <= 0 || kg > 500) throw new IllegalArgumentException("체중 범위가 올바르지 않습니다.");
@@ -146,15 +125,66 @@ public class UserService {
         }
         System.out.println();
         //추가적으로 정보 읽어서 입력
+        int todayCalories;
+        int todayProtein;
+        int targetCalories;
+        int targetProtein;
+        int currentWater;
+        int targetWater;
         for(int i = 0 ; i < week ; i++) {
+        	if(user.getGoalHistory().get(today.plusDays(i-6)) == null || user.getEatingHistory().get(today.plusDays(i-6)) == null ) {
+        		System.out.printf("%02dXXX\t", today.plusDays(i-6).getDayOfMonth());
+        		continue;
+        	}
+        	todayCalories = 0 ;
+            todayProtein = 0 ;
+            targetCalories = user.getGoalHistory().get(today.plusDays(i-6)).getTargetCalories() ;
+            targetProtein = user.getGoalHistory().get(today.plusDays(i-6)).getTargetProtein();
+            currentWater = user.getGoalHistory().get(today.plusDays(i-6)).getCurrentWater();
+            targetWater = user.getGoalHistory().get(today.plusDays(i-6)).getTargetWater() ;
             // .getDayOfMonth LocalDate타입을 일로 int값 반환
             // 세 개 조건 합당할 시 별 찍어주기
-            System.out.printf("%02d\t", today.plusDays(i-6).getDayOfMonth());
+            if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
+            	System.out.print("*");
+            }
+            for(Food food : user.getEatingHistory().get(today.plusDays(i-6))) {            	
+            	todayCalories += food.getCalorie();
+            	todayProtein += food.getProtein();
+            }
+            
+            //일 찍어주기
+            System.out.printf("%02d", today.plusDays(i-6).getDayOfMonth());
+            
             // 조건부 마크 입력
-            //if()
+            // 칼로리
+            if( ( todayCalories - targetCalories) >= 0) {
+            	//O
+            	System.out.print("O");
+            }else {
+            	//X
+            	System.out.print("X");
+            }
+        	// 단백질
+            if( ( todayProtein - targetProtein ) >= 0) {
+            	//O
+            	System.out.print("O");
+            }else {
+            	//X
+            	System.out.print("X");
+            }
+        	// 물
+            if( ( currentWater - targetWater ) >= 0) {
+            	//O
+            	System.out.print("O");
+            }else {
+            	//X
+            	System.out.print("X");
+            }
+            System.out.print("\t");
         }
+        System.out.println();
+        System.out.println();
     }
-
     public void checkMonthlyGoal(User user) {
         int lastDay = LocalDate.now().lengthOfMonth();
         // 해당 달의 시작 요일 얻기
@@ -163,23 +193,124 @@ public class UserService {
         int startDay = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 1).getDayOfWeek().getValue();
         System.out.println(LocalDate.now().getYear() + "년" + LocalDate.now().getMonthValue() + "월 \n");
         System.out.println("일\t월\t화\t수\t목\t금\t토");
-        int currentDay = 1;
+        
+        int todayCalories;
+        int todayProtein;
+        int targetCalories;
+        int targetProtein;
+        int currentWater;
+        int targetWater;
+        // 달력 1부터 출력하기위한 요소
+        int current = 1;
+        // 각 달성량을 위한 localdate 타입
+        LocalDate currentday;
         for(int i = 0; i <= 42 ; i++) {
-            if(i < startDay) {
+        	todayCalories = 0 ;
+            todayProtein = 0 ;
+
+            if(i < startDay+1) {
                 System.out.print("\t");
             }else {
-                System.out.printf("%02d\t", currentDay);
-                currentDay++;
+                currentday = LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonth(), current);
+            	if(user.getGoalHistory().get(currentday) == null || user.getEatingHistory().get(currentday) == null ) {
+            		System.out.printf("%02dXXX\t", current);
+            	}else {
+            		targetCalories = user.getGoalHistory().get(currentday).getTargetCalories() ;
+                    targetProtein = user.getGoalHistory().get(currentday).getTargetProtein();
+                    currentWater = user.getGoalHistory().get(currentday).getCurrentWater();
+                    targetWater = user.getGoalHistory().get(currentday).getTargetWater() ;
+                    
+                    // .getDayOfMonth LocalDate타입을 일로 int값 반환
+                    // 세 개 조건 합당할 시 별 찍어주기
+                    if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
+                    	System.out.print("*");
+                    }
+                    for(Food food : user.getEatingHistory().get(currentday)) {            	
+                    	todayCalories += food.getCalorie();
+                    	todayProtein += food.getProtein();
+                    }                
+                    //일 찍어주기
+                    System.out.printf("%02d", current);
+                    
+                    // 조건부 마크 입력
+                    // 칼로리
+                    if( ( todayCalories - targetCalories) >= 0) {
+                    	//O
+                    	System.out.print("O");
+                    }else {
+                    	//X
+                    	System.out.print("X");
+                    }
+                	// 단백질
+                    if( ( todayProtein - targetProtein ) >= 0) {
+                    	//O
+                    	System.out.print("O");
+                    }else {
+                    	//X
+                    	System.out.print("X");
+                    }
+                	// 물
+                    if( ( currentWater - targetWater ) >= 0) {
+                    	//O
+                    	System.out.print("O");
+                    }else {
+                    	//X
+                    	System.out.print("X");
+                    }
+                    System.out.print("\t");
+            	}
+                current++;
             }
             if(i%7 == 0 ) {
                 System.out.println();
             }
-            if(currentDay > lastDay) {
+            if(current > lastDay) {
                 break;
             }
         }
-    }
+        System.out.println();
+        System.out.println();
 
+    }
+    // ===== 칼로리 섭취량 표시 =====
+    //목표 칼로리 - 현재 섭취량(for문 합산 , List<Food>) 메인화면 사용 
+    public void checkDailyCalories(User user) {
+        //List<Food> 형태 필요
+    	//운동한 만큼 더 먹어야한다!
+        int todayCalories = 0;
+        if(user.getEatingHistory().get(LocalDate.now()) == null || user.getGoalHistory().get(LocalDate.now()) == null) {
+        	of.print(Labels.CHECKCALORIES.getValue(), "금일 식단 데이터 부족");
+        	return;
+        }
+        for(Food food : user.getEatingHistory().get(LocalDate.now())) {            	
+        	todayCalories += food.getCalorie();
+        }      
+        //운동 칼로리 추가 이후 주석 해제
+//        todayCalories += user.getGoalHistory().get(LocalDate.now()).getExerciseCarlories();
+        of.print(Labels.CHECKCALORIES.getValue() , (user.getTargetCalories()-todayCalories) );
+    }
+    //목표 단백질 - 현재 섭취량(for문 합산 , List<Food>) 메인화면 사용
+    public void checkDailyProtein(User user){
+        int todayProtein = 0;
+        if(user.getEatingHistory().get(LocalDate.now()) == null || user.getGoalHistory().get(LocalDate.now()) == null) {
+        	of.print(Labels.CHECKPROTEIN.getValue(), "금일 식단 데이터 부족");
+        	return;
+        }
+        for(Food food : user.getEatingHistory().get(LocalDate.now())) {            	
+        	todayProtein += food.getProtein();
+        }      
+        of.print(Labels.CHECKPROTEIN.getValue() , (user.getTargetProtein()-todayProtein) );       
+    }
+    public void checkDailyWater(User user) {
+    	int todayWater = 0;
+        if( user.getGoalHistory().get(LocalDate.now()) == null) {
+        	of.print(Labels.CHECKWATER.getValue(), "금일 물 데이터 부족");
+        	return;
+        }
+    	of.print(Labels.CHECKWATER.getValue(), 
+    	user.getGoalHistory().get(LocalDate.now()).getTargetWater() 
+    	- user.getGoalHistory().get(LocalDate.now()).getCurrentWater()  );
+    }
     // ====== 저장 ======
     public void saveUser(User user) {
         userRepo.save(user);

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import domain.EatingOutFood;
 import domain.Food;
@@ -12,7 +13,7 @@ import domain.FoodFactory;
 import domain.User;
 import domain.enums.Allergy;
 
-public class EatingOutService {
+public class EatingOutService extends recommendTemplate{
 	
 	private User user;
 	private FoodFactory foodFactory;
@@ -41,16 +42,26 @@ public class EatingOutService {
 	public void eatFood(String name){
 		
 		//음식 리스트에 있는 음식인지 확인
+		/*
 		EatingOutFood eatingOutFood = foodFactory.createEatingOutFood(name);
 		
 		if(eatingOutFoodList.contains(eatingOutFood)) {
 			System.out.println(name+"을 먹었습니다.");
 			
-			
 		}else {
-			//냉장고에 없는 음식을 먹을 시 출력
-			System.out.println("냉장고에 없는 음식입니다.");
+			//외식 음식 리스트에 없는 음식을 먹을 시 출력
+			System.out.println("주문할 수 없는 음식입니다.");
 		}		
+		 */
+		
+		for(EatingOutFood eatingOutFood : eatingOutFoodList) {
+			if(eatingOutFood.getName().equals(name)) {
+				System.out.println(name+"을 먹었습니다.");
+				return;
+			} else continue;			
+		}
+		//외식 음식 리스트에 없는 음식을 먹을 시 출력
+		System.out.println("주문할 수 없는 음식입니다.");
 	}
 	
 	/*
@@ -58,6 +69,7 @@ public class EatingOutService {
 	 * 알레르기, 칼로리, 단백질 등을 고려하여 해당하는 음식을 출력
 	 * 단백질 높음, 칼로리 높음을 기준으로 상위 3개 추천
 	 */
+	@Override
 	public void recommend() {
 		int mealsPerDay = user.getMinMeal()>0 ? user.getMinMeal() : 3; //하루 끼니 수
 		int mealCalories = user.getTargetCalories()/mealsPerDay; //한 끼 칼로리
@@ -110,31 +122,12 @@ public class EatingOutService {
 	}
 	
 	/*
-	 * 알레르기 검사 함수
-	 * 해당 음식과 사용자의 알레르기 항목 중 겹치는 것이 있다면 true 반환
-	 */
-	private boolean checkAllergy(User user, Food food) {
-		List<Allergy> userAllergies = user.getAllergy();
-		List<Allergy> foodAllergies = food.getAllergy();
-		
-		if(userAllergies==null || foodAllergies==null || userAllergies.isEmpty() || foodAllergies.isEmpty()) return false;
-		
-		for (Allergy allergy : foodAllergies) {
-	        if (userAllergies.contains(allergy)) {
-	        	//겹치는 알레르기가 있다면 true 반환
-	            return true; 
-	        }
-	    }
-		//겹치는 알레르기가 없다면 false 반환
-		return false; 
-	}
-	
-	/*
 	 * 음식 점수 계산 함수
 	 * 단백질과 칼로리는 높을수록 가점
 	 * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
 	 */
-	private double scoring(Food food, int mealCalories, int mealProtein) {
+	@Override
+	protected double scoring(Food food, int mealCalories, int mealProtein) {
 		
 		double score = 0.0;
 		EatingOutFood eatingOutFood = (EatingOutFood)food;

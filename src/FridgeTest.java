@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-
 import domain.Food;
 import domain.HomeFood;
 import domain.User;
 import domain.enums.Allergy;
+import service.EatingOutService;
 import service.FridgeService;
 
 public class FridgeTest {
@@ -33,8 +33,7 @@ public class FridgeTest {
 		FridgeService svc = new FridgeService(user);
 		
 		Map<String, Queue<Food>> map = user.getFridge().getFoodList();
-		
-		
+
 		Queue<Food> qTest = new LinkedList<>();
 		qTest.add(new HomeFood("Test", 200, 20, List.of(), LocalDate.now().minusDays(1), 1)); //유통기한 만료
 		qTest.add(new HomeFood("Test", 210, 21, List.of(), LocalDate.now().plusDays(3), 1));
@@ -62,7 +61,22 @@ public class FridgeTest {
 				
 		svc.foodList();
 		
+		System.out.println("===========");
+		
 		svc.recommend();
+		
+		System.out.println("===========");
+		System.out.println("===========");
+		
+		EatingOutService svc2 = new EatingOutService(user);
+		
+		svc2.recommend();
+		
+		System.out.println("===========");
+		
+		svc2.eatFood("friedChicken");
+		
+		System.out.println("===========");
 
 	}
 

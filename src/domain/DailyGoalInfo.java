@@ -14,6 +14,7 @@ public class DailyGoalInfo implements Serializable {
     private int targetWater;
     //물 량(ml)
     private int currentWater;
+    private int exerciseCarlories;
 
     public DailyGoalInfo() {}
 
@@ -26,6 +27,7 @@ public class DailyGoalInfo implements Serializable {
         this.height        = u.getHeight();
         this.targetWater   = u.getTargetWater();
         this.currentWater  = 0;
+        this.exerciseCarlories =0;
     }
 
     // getters/setters …
@@ -53,4 +55,7 @@ public class DailyGoalInfo implements Serializable {
     public int getCurrentWater() { return currentWater; }
     public void addCurrentWater(int ml) { this.currentWater += ml; }
     public void setCurrentWater(int ml) { this.currentWater = ml; }
+    
+    public int getExerciseCarlories() { return exerciseCarlories; }
+    public void setExerciseCarlories(int cal) {this.exerciseCarlories =cal;  }
 }
