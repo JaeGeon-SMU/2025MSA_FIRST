@@ -96,7 +96,7 @@ public class UserService {
 //      일주일 목표
         LocalDate today = LocalDate.now();
         final int week = 7;
-        System.out.printf("\t이번 주의 달력,\t오늘은 %d월 %d일\n",today.getMonth().getValue() , today.getDayOfMonth());
+        System.out.printf("\t이번 주의 달력, 오늘은 %d월 %d일\n\t목표달성 아이콘 \t★= 모두 완료, C=칼로리, P=단백질, W=물\n ",today.getMonth().getValue() , today.getDayOfMonth());
         for(int i = 0 ; i < week ; i++) {
             //6일 전으로 해야지 하루 전 요일 시작, 그 다음부터 하나하나 더해가기
             switch(today.plusDays(i-6).getDayOfWeek().getValue()) {
@@ -146,7 +146,7 @@ public class UserService {
             // .getDayOfMonth LocalDate타입을 일로 int값 반환
             // 세 개 조건 합당할 시 별 찍어주기
             if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
-            	System.out.print("*");
+            	System.out.print("★");
             }
             for(Food food : user.getEatingHistory().get(today.plusDays(i-6))) {            	
             	todayCalories += food.getCalorie();
@@ -154,32 +154,32 @@ public class UserService {
             }
             
             //일 찍어주기
-            System.out.printf("%02d", today.plusDays(i-6).getDayOfMonth());
+            System.out.printf("%02d ", today.plusDays(i-6).getDayOfMonth());
             
             // 조건부 마크 입력
             // 칼로리
             if( ( todayCalories - targetCalories) >= 0) {
             	//O
-            	System.out.print("O");
+            	System.out.print("C");
             }else {
             	//X
-            	System.out.print("X");
+            	System.out.print("_");
             }
         	// 단백질
             if( ( todayProtein - targetProtein ) >= 0) {
             	//O
-            	System.out.print("O");
+            	System.out.print("P");
             }else {
             	//X
-            	System.out.print("X");
+            	System.out.print("_");
             }
         	// 물
             if( ( currentWater - targetWater ) >= 0) {
             	//O
-            	System.out.print("O");
+            	System.out.print("W");
             }else {
             	//X
-            	System.out.print("X");
+            	System.out.print("_");
             }
             System.out.print("\t");
         }
@@ -192,8 +192,9 @@ public class UserService {
         // 1 : 일요일 2 : 월요일 3: 화요일
         // 해당 달의 첫 번째 일. 의 요일 정보 얻기();
         int startDay = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), 1).getDayOfWeek().getValue();
-        System.out.println(LocalDate.now().getYear() + "년" + LocalDate.now().getMonthValue() + "월 \n");
+        System.out.println("\t" + LocalDate.now().getYear() + "년" + LocalDate.now().getMonthValue() + "월 \n");
         System.out.println("일\t월\t화\t수\t목\t금\t토");
+        System.out.println("\t목표달성 아이콘 \t★= 모두 완료, C=칼로리, P=단백질, W=물");
         
         int todayCalories;
         int todayProtein;
@@ -224,7 +225,7 @@ public class UserService {
                     // .getDayOfMonth LocalDate타입을 일로 int값 반환
                     // 세 개 조건 합당할 시 별 찍어주기
                     if( (todayCalories - targetCalories) >= 0 && ( todayProtein - targetProtein ) >= 0 && ( currentWater - targetWater ) >= 0) {
-                    	System.out.print("*");
+                    	System.out.print("★");
                     }
                     for(Food food : user.getEatingHistory().get(currentday)) {            	
                     	todayCalories += food.getCalorie();
@@ -237,26 +238,26 @@ public class UserService {
                     // 칼로리
                     if( ( todayCalories - targetCalories) >= 0) {
                     	//O
-                    	System.out.print("O");
+                    	System.out.print("C");
                     }else {
                     	//X
-                    	System.out.print("X");
+                    	System.out.print("_");
                     }
                 	// 단백질
                     if( ( todayProtein - targetProtein ) >= 0) {
                     	//O
-                    	System.out.print("O");
+                    	System.out.print("P");
                     }else {
                     	//X
-                    	System.out.print("X");
+                    	System.out.print("_");
                     }
                 	// 물
                     if( ( currentWater - targetWater ) >= 0) {
                     	//O
-                    	System.out.print("O");
+                    	System.out.print("W");
                     }else {
                     	//X
-                    	System.out.print("X");
+                    	System.out.print("_");
                     }
                     System.out.print("\t");
             	}
