@@ -9,6 +9,7 @@ import domain.dto.SignUpInfo;
 import domain.enums.Allergy;
 import repo.UserRepo;
 import service.AuthenticationService;
+import service.ChatGptSummaryService;
 import service.FridgeService;
 import domain.User;
 import domain.dto.SignUpInfo;
@@ -32,8 +33,7 @@ public class App {
             }
 
             // 로그인 성공 후 메인 메뉴로 이동
-            FridgeService fridgeService = new FridgeService(user);
-            MainAfterLoginMenu mainMenu = new MainAfterLoginMenu(user, userService, sc, fridgeService);
+            MainAfterLoginMenu mainMenu = new MainAfterLoginMenu(user, sc);
             mainMenu.run();
             
         }
