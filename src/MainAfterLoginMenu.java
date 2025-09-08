@@ -1,20 +1,23 @@
 import java.util.Scanner;
 
 import domain.User;
+import service.ChatGptSummaryService;
 import service.FridgeService;
 import service.UserService;
 
 public class MainAfterLoginMenu {
     private final User user;
     private final UserService userService;
+    private final ChatGptSummaryService gptService;
     private final Scanner sc;
     private final FridgeService fridgeService;
 
-    public MainAfterLoginMenu(User user, UserService userService, Scanner sc, FridgeService fridgeService) {
+    public MainAfterLoginMenu(User user, Scanner sc) {
         this.user = user;
         this.userService = userService;
+        this.fridgeService = fridgeService = new FridgeService(user);
+        this.gptService = new ChatGptSummaryService();
         this.sc = sc;
-        this.fridgeService = fridgeService;
     }
 
     public void run() {
@@ -26,8 +29,10 @@ public class MainAfterLoginMenu {
 
         while (true) {
             System.out.println();
-           
             userService.checkWeeklyGoal(user);
+            
+            //시연할때만 추가
+//            System.out.println(gptService.chatGptAsk("[ {명언 내용} - {인물} ] 형태로 실제 인물이 말한 명언 하나만 한국어로 적어, 난 지금 살 찌우려고 노력하는 중이야."));
             System.out.println("사용자 : " + user.getUserId());
             userService.checkDailyCalories(user);
             userService.checkDailyProtein(user);
@@ -40,7 +45,8 @@ public class MainAfterLoginMenu {
             System.out.println("4. 오늘 먹은 음식 보기");
             System.out.println("5. 냉장고 관리");
             System.out.println("6. 이번 달 통계 보기");
-            System.out.println("7. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
+            System.out.println("7. AI 요약");
+            System.out.println("8. 로그아웃 / 종료");       // ★ 번호 한 칸 뒤로
             System.out.print("선택: ");
 
             String in = sc.nextLine().trim();
@@ -71,7 +77,7 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 5: {
-                	FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, userService, user, sc);
+                	  FridgeMenu fridgeMenu = new FridgeMenu(fridgeService, userService, user, sc);
                     fridgeMenu.start();
                     break;
                 }
@@ -80,11 +86,16 @@ public class MainAfterLoginMenu {
                     break;
                 }
                 case 7: {
+                	System.out.println("\t...요약중...");
+                	System.out.println(gptService.askGptWithUserPrompt(user));
+                	break;
+                }
+                case 8: {
                     System.out.println("로그아웃합니다. 안녕!");
                     return;
                 }
                 default: {
-                    System.out.println("1~7 중에서 선택하세요.");
+                    System.out.println("1~8 중에서 선택하세요.");
                     break;
                 }
             }

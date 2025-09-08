@@ -4,13 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import domain.Food;
+import domain.User;
+import util.enums.Labels;
 
 // https://rollbar.com/blog/how-to-use-chatgpt-api-with-java/?utm_source=chatgpt.com
 public class ChatGptSummaryService {
-	public static String chatGptAsk(String prompt) {
+	public String chatGptAsk(String prompt) {
 			String url = "https://api.openai.com/v1/chat/completions";
 			String apiKey = ""; //텍스트파일 저장 or 키 값 입력 
 			String model = "gpt-5-nano";
@@ -18,13 +24,22 @@ public class ChatGptSummaryService {
 			try {
 				//URL 커넥션 필요
 				URL obj = new URL(url);
-				HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+				HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Authorization", "Bearer " + apiKey);
 				connection.setRequestProperty("Content-Type", "application/json");
+				connection.setDoOutput(true);
+				
+				// TLS 버전 강제 (필요시)
+				System.setProperty("https.protocols", "TLSv1.2");
 				
 				// api로 쏠 request body 작성
-				String body = "{\"model\": \"" + model + "\", \"messages\":[{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+				String body = "{"
+				        + "\"model\": \"" + model + "\","
+				        + "\"messages\": ["
+				        + "  {\"role\": \"user\", \"content\": \"" + prompt.replace("\"", "\\\"").replace("\n", "\\n") + "\"}"
+				        + "]"
+				        + "}";
 				// io입출력으로 사용할 것이냐?
 				connection.setDoOutput(true); 
 				// 입출력 전용 Stream
@@ -55,8 +70,52 @@ public class ChatGptSummaryService {
 			return "응답 에러";
 
 	}
+	public String askGptWithUserPrompt(User user) {
+		// 주간 요약
+		LocalDate today = LocalDate.now();
+		StringBuffer weeklyInfo = new StringBuffer("");
+		weeklyInfo.append("유저 아이디 : " +user.getUserId() + "\n");
+		weeklyInfo.append("오늘은 " + today.getMonth().getValue() + "월" + today.getDayOfMonth() + "일" + "\n");
+		final int week = 7;
+        int todayCalories;
+        int todayProtein;
+        int targetCalories;
+        int targetProtein;
+        int currentWater;
+        int targetWater;	        
+		for(int i = 0 ; i < week ; i++) {
+			//정보 있는지 체크
+			if(user.getGoalHistory().get(today.plusDays(i-6)) == null || user.getEatingHistory().get(today.plusDays(i-6)) == null ) {
+        		weeklyInfo.append(today.plusDays(i-6).toString()+" 정보 없음.\n");
+        		continue;
+        	}
+	        //문제 없다면
+        	todayCalories = 0 ;
+            todayProtein = 0 ;
+            targetCalories = user.getGoalHistory().get(today.plusDays(i-6)).getTargetCalories() ;
+            targetProtein = user.getGoalHistory().get(today.plusDays(i-6)).getTargetProtein();
+            currentWater = user.getGoalHistory().get(today.plusDays(i-6)).getCurrentWater();
+            targetWater = user.getGoalHistory().get(today.plusDays(i-6)).getTargetWater() ;
+            for(Food food : user.getEatingHistory().get(today.plusDays(i-6))) {            	
+            	todayCalories += food.getCalorie();
+            	todayProtein += food.getProtein();
+            }
+            //일 정보 넣어주기
+            weeklyInfo.append(today.plusDays(i-6).toString() + "의 유저 개인 달성 정보 -");
+            weeklyInfo.append(Labels.TARGETCALORIES.getValue() + targetCalories);
+            weeklyInfo.append(Labels.CHECKCALORIES.getValue() + todayCalories);
+            weeklyInfo.append(Labels.TARGETPROTEIN.getValue() + targetProtein);
+            weeklyInfo.append(Labels.CHECKPROTEIN.getValue() + todayProtein);
+            weeklyInfo.append(Labels.TARGETWATER.getValue() + targetWater);
+            weeklyInfo.append(Labels.CHECKWATER.getValue() + currentWater);
+            weeklyInfo.append("\n");
 
-	private static String extactMessageFromJSONResponse(String response) {
+		}
+		System.out.println(weeklyInfo.toString());
+		return chatGptAsk(weeklyInfo.toString()+"\n위의 정보로 이번 주 요약과 다음 일주일 요약을 알려줘");
+	}
+
+	private String extactMessageFromJSONResponse(String response) {
 		int start = response.indexOf("content") + 11;
 		int end = response.indexOf("\"", start);
 		
