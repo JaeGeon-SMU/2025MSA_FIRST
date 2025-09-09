@@ -381,17 +381,12 @@ public class FridgeService extends recommendTemplate{
 		return fridge.getWaterCnt();
 	}
 
-	/*
-	 * 음식 추천 함수 (템플릿 호출로 위임)
-	 */
-	@Override
-	public void recommend() {
-		foodRecommend(user);
-	}
 
+	
 	// ===== 템플릿 3단계 구현 =====
 
-	// 1) 후보 구성 + 알레르기/만료 필터 리스트 반환
+	// 1) 후보 구성 + 알레르기/만료 필터 리스트 반
+	
 	@Override
 	protected List<Food> checkAllergy(User user) {
 		List<Food> foodCandidates = new ArrayList<Food>(); // 음식 후보 리스트
