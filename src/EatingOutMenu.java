@@ -35,7 +35,7 @@ public class EatingOutMenu {
     			switch (choice) {
     			case 1:
             		//음식 추천 받기
-    				eatingOutService.recommend();
+    				eatingOutService.foodRecommend(user);
                 break;
             case 2:
             		//외식 하기
