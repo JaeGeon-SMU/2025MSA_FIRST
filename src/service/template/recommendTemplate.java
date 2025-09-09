@@ -33,8 +33,6 @@ public abstract class recommendTemplate {
     protected abstract List<Food> scoring(User user, List<Food> foods);
     protected abstract void showRecommendations(List<Food> sortedFoods);
 
-    // ===== 단일 아이템 점수 계산(서브클래스에서 그대로 사용 중) =====
-    protected abstract double scoring(Food food, int mealCalories, int mealProtein);
 
     /*
      * 공통 알레르기 검사 함수
