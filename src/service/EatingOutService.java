@@ -131,8 +131,8 @@ public class EatingOutService extends recommendTemplate {
      * 단백질과 칼로리는 높을수록 가점
      * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
      */
-    @Override
-    protected double scoring(Food food, int mealCalories, int mealProtein) {
+    
+    public double scoring(Food food, int mealCalories, int mealProtein) {
 
         double score = 0.0;
         EatingOutFood eatingOutFood = (EatingOutFood) food;
