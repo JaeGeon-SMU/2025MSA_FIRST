@@ -59,14 +59,6 @@ public class EatingOutService extends recommendTemplate {
         System.out.println("주문할 수 없는 음식입니다.");
     }
 
-    /*
-     * 음식 추천 함수 (템플릿 호출로 위임)
-     */
-    @Override
-    public void recommend() {
-        foodRecommend(user);
-    }
-
     // ===== 템플릿 3단계 구현 =====
 
     // 1) 알레르기 필터링 리스트 반환 (외식은 만료 개념 없음)
