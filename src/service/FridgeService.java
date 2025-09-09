@@ -304,9 +304,11 @@ public class FridgeService extends recommendTemplate{
 	 */
 	public void checkFood(String name) {
 	    Queue<Food> queue = fridge.getFoodList().get(name);
-
-	    if (queue != null) {
-	        HomeFood food = (HomeFood) queue.peek();
+	    
+	    if(queue == null || queue.isEmpty()) {
+	    	System.out.println(name + "의 남은 수량: 0개");
+	    }else {
+	    	HomeFood food = (HomeFood) queue.peek();
 	        int currentCount = queue.size();
 	        int reorderPoint = food.getReorderPoint();
 
@@ -316,6 +318,7 @@ public class FridgeService extends recommendTemplate{
 	                + "개 이하입니다. 추가 주문 잊지말고 해주세요 ~~!");
 	        }
 	    }
+
 	}
 	
 	/*
