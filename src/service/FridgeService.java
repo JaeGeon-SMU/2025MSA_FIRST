@@ -27,8 +27,6 @@ public class FridgeService extends recommendTemplate{
 	private Fridge fridge;
 	private FoodFactory foodFactory;
 	
-	
-
 	public FridgeService(User user) {
 		this.user = user;
 		this.fridge = user.getFridge();
@@ -41,21 +39,6 @@ public class FridgeService extends recommendTemplate{
 	 */
 	public void putFood(String name, int count) {
 		Queue<Food> queue = fridge.getFoodList().get(name);
-		
-		/*
-		HomeFood homeFood = foodFactory.createHomeFood(name);
-		
-		if(queue==null && homeFood!=null) {
-			queue = new LinkedList<>();
-			fridge.getFoodList().put(name, queue);			
-		}
-		
-		for(int i=0; i<count; i++) {
-			//개수만큼 음식 추가
-			if(homeFood != null) queue.add(homeFood);
-			System.out.println("냉장고에 " + name + "을 " + count + "개 넣었습니다.");
-		}
-		*/
 		
 		HomeFood homeFood = foodFactory.createHomeFood(name);
 		if(homeFood == null) {
@@ -325,11 +308,10 @@ public class FridgeService extends recommendTemplate{
 	    if (queue != null) {
 	        HomeFood food = (HomeFood) queue.peek();
 	        int currentCount = queue.size();
-	        int currentCountMinusOne = currentCount-1;
 	        int reorderPoint = food.getReorderPoint();
 
 	        if (currentCount <= reorderPoint) {
-	            System.out.println(name + "의 남은 수량: " + currentCountMinusOne 
+	            System.out.println(name + "의 남은 수량: " + currentCount 
 	                + "개, 최소 수량: " + reorderPoint 
 	                + "개 이하입니다. 추가 주문 잊지말고 해주세요 ~~!");
 	        }
@@ -399,72 +381,89 @@ public class FridgeService extends recommendTemplate{
 		return fridge.getWaterCnt();
 	}
 
-	
-	
 	/*
-	 * 음식 추천 함수
-	 * 알레르기, 칼로리, 단백질 등을 고려하여 해당하는 음식을 출력
-	 * 유통기한 임박, 단백질 높음, 칼로리 높음을 기준으로 상위 3개 추천
+	 * 음식 추천 함수 (템플릿 호출로 위임)
 	 */
 	@Override
 	public void recommend() {
-		
-		LocalDate today = LocalDate.now(); //오늘 날짜
-		int mealsPerDay = user.getMinMeal()>0 ? user.getMinMeal() : 3; //하루 끼니 수
-		int mealCalories = (user.getTargetCalories()+user.getExerciseCarlories())/mealsPerDay; //한 끼 칼로리
-		int mealProtein = user.getTargetProtein()/mealsPerDay; //한 끼 단백질
-		
-		List<HomeFood> foodCandidates = new ArrayList<>(); //음식 후보 리스트
-		
-		for(Map.Entry<String, Queue<Food>> foodEntry : fridge.getFoodList().entrySet()) {
+		foodRecommend(user);
+	}
+
+	// ===== 템플릿 3단계 구현 =====
+
+	// 1) 후보 구성 + 알레르기/만료 필터 리스트 반환
+	@Override
+	protected List<Food> checkAllergy(User user) {
+		List<Food> foodCandidates = new ArrayList<Food>(); // 음식 후보 리스트
+
+		for (Map.Entry<String, Queue<Food>> foodEntry : fridge.getFoodList().entrySet()) {
 			Queue<Food> foodQueue = foodEntry.getValue();
-			if(foodQueue==null || foodQueue.isEmpty()) continue;
-			
-			HomeFood repFood = null; //대표 음식
-			for(Food food : foodQueue) {
-				HomeFood homeFood = (HomeFood)food; 
-				
-				//유통기한 지난 음식 제외
+			if (foodQueue == null || foodQueue.isEmpty()) continue;
+
+			HomeFood repFood = null; // 대표 음식
+			for (Food food : foodQueue) {
+				HomeFood homeFood = (HomeFood) food;
+
+				// 유통기한 지난 음식 제외
 				LocalDate exp = homeFood.getExpireDate();
-				if(exp!=null && exp.isBefore(LocalDate.now())) continue;
-				
-				//알레르기 해당하는 음식 제외
-				if(checkAllergy(user, homeFood)) continue;
-				
+				if (exp != null && exp.isBefore(LocalDate.now())) continue;
+
+				// 알레르기 해당하는 음식 제외
+				if (checkAllergy(user, homeFood)) continue;
+
 				repFood = homeFood;
 				break;
 			}
-			if(repFood!=null) foodCandidates.add(repFood);			
-			
-		}		
-		
-		//후보가 없다면 종료
-		if(foodCandidates.isEmpty()) {
+			if (repFood != null) foodCandidates.add(repFood);
+		}
+		return foodCandidates;
+	}
+
+	// 2) 스코어 계산 + 점수순 정렬 리스트 반환
+	@Override
+	protected List<Food> scoring(User user, List<Food> foods) {
+		int mealsPerDay = user.getMinMeal() > 0 ? user.getMinMeal() : 3; // 하루 끼니 수
+		int mealCalories = (user.getTargetCalories() + user.getExerciseCarlories()) / mealsPerDay; // 한 끼 칼로리
+		int mealProtein = user.getTargetProtein() / mealsPerDay; // 한 끼 단백질
+
+		Map<HomeFood, Double> scoreMap = new HashMap<HomeFood, Double>();
+		List<HomeFood> list = new ArrayList<HomeFood>();
+		for (int i = 0; i < foods.size(); i++) {
+			HomeFood homeFood = (HomeFood) foods.get(i);
+			list.add(homeFood);
+			double score = scoring(homeFood, mealCalories, mealProtein);
+			scoreMap.put(homeFood, score);
+		}
+
+		// 정렬: 점수 내림차순, 유통기한 오름차순
+		Collections.sort(list, new HomeFoodScoreComparator(scoreMap));
+
+		// List<Food>로 변환해 반환
+		List<Food> out = new ArrayList<Food>();
+		for (int i = 0; i < list.size(); i++) out.add(list.get(i));
+		return out;
+	}
+
+	// 3) 상위 후보 출력
+	@Override
+	protected void showRecommendations(List<Food> sortedFoods) {
+		List<HomeFood> foodCandidates = new ArrayList<HomeFood>();
+		for (int i = 0; i < sortedFoods.size(); i++) {
+			foodCandidates.add((HomeFood) sortedFoods.get(i));
+		}
+
+		if (foodCandidates.isEmpty()) {
 			System.out.println("추천할 수 있는 음식이 없습니다.");
 			return;
 		}
 
-		
-		//점수 계산
-		Map<HomeFood, Double> scoreMap = new HashMap<>();
-		for(HomeFood homeFood : foodCandidates) {
-			//double score = scoring(homeFood, today, mealCalories, mealProtein);
-			double score = scoring(homeFood, mealCalories, mealProtein);
-			scoreMap.put(homeFood, score);
-		}		
-		
-		//정렬
-		//점수 내림차순, 유통기한 오름차순
-		Collections.sort(foodCandidates, new HomeFoodScoreComparator(scoreMap));
-		
-		//상위 후보 출력
-		int limit = 3; //출력할 음식 후보 개수
-		for(int i=0; i<Math.min(limit, foodCandidates.size()); i++) {
+		int limit = 3; // 출력할 음식 후보 개수
+		for (int i = 0; i < Math.min(limit, foodCandidates.size()); i++) {
 			HomeFood homeFood = foodCandidates.get(i);
-			System.out.println((i+1) + " " + homeFood.toString());
+			System.out.println((i + 1) + " " + homeFood.toString());
 		}
 	}
-	
+
 	/*
 	 * 알레르기 검사 함수
 	 * 해당 음식과 사용자의 알레르기 항목 중 겹치는 것이 있다면 true 반환
@@ -493,37 +492,37 @@ public class FridgeService extends recommendTemplate{
 	 */
 	@Override
 	protected double scoring(Food food, int mealCalories, int mealProtein) {
-		
+
 		double score = 0.0;
-		HomeFood homeFood = (HomeFood)food;		
-		
-		//유통기한 점수 계산
+		HomeFood homeFood = (HomeFood) food;
+
+		// 유통기한 점수 계산
 		long daysLeft = 1000;
 		LocalDate exp = homeFood.getExpireDate();
-		if(exp!=null) {
+		if (exp != null) {
 			daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), exp);
-			if(daysLeft<0) daysLeft = 0;
+			if (daysLeft < 0) daysLeft = 0;
 		}
-		score += 100.0/(daysLeft+1.0);
-		
-		//칼로리 점수 계산
-		int calTarget = (mealCalories>0) ? mealCalories : 1;
+		score += 100.0 / (daysLeft + 1.0);
+
+		// 칼로리 점수 계산
+		int calTarget = (mealCalories > 0) ? mealCalories : 1;
 		double calRatio = homeFood.getCalorie() / (double) calTarget;
-		double calCapped = Math.min(calRatio, 2.0); //상한
-		double calweight = 10.0; //가중치
-		score += calweight*calCapped;
-		
-		//단백질 점수 계산
-		int proTarget = (mealProtein>0) ? mealProtein : 1;
+		double calCapped = Math.min(calRatio, 2.0); // 상한
+		double calweight = 10.0; // 가중치
+		score += calweight * calCapped;
+
+		// 단백질 점수 계산
+		int proTarget = (mealProtein > 0) ? mealProtein : 1;
 		double proRatio = homeFood.getProtein() / (double) proTarget;
-		double proCapped = Math.min(proRatio, 2.0); //상한
-		double proweight = 20.0; //가중치
-		score += proweight*proCapped;
-		
-		//최종 점수 반환
-		return score;		
+		double proCapped = Math.min(proRatio, 2.0); // 상한
+		double proweight = 20.0; // 가중치
+		score += proweight * proCapped;
+
+		// 최종 점수 반환
+		return score;
 	}
-	
+
 	/*
 	 * 음식 점수 계산 함수
 	 * 유통기한: 임박할수록 가점
@@ -603,6 +602,4 @@ public class FridgeService extends recommendTemplate{
 	    }
 	    return null;
 	}
-
-
 }
