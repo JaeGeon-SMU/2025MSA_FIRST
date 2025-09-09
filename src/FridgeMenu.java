@@ -75,7 +75,8 @@ public class FridgeMenu {
                     saveUser();
                     break;
                 case 11:
-                		fridgeService.recommend(); //음식 추천 받기
+                    fridgeService.foodRecommend(user);
+                    saveUser();
                     break;
                 case 12:
                 		//냉장고 물 수량 확인하기
