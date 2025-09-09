@@ -398,8 +398,6 @@ public class FridgeService extends recommendTemplate{
 		//System.out.printf("냉장고 물 수량: %d\n", fridge.getWaterCnt());
 		return fridge.getWaterCnt();
 	}
-
-	
 	
 	/*
 	 * 음식 추천 함수
