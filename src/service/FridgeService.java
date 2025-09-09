@@ -329,7 +329,7 @@ public class FridgeService extends recommendTemplate{
 	        int reorderPoint = food.getReorderPoint();
 
 	        if (currentCount <= reorderPoint) {
-	            System.out.println(name + "의 남은 수량: " + currentCountMinusOne; 
+	            System.out.println(name + "의 남은 수량: " + currentCountMinusOne 
 	                + "개, 최소 수량: " + reorderPoint 
 	                + "개 이하입니다. 추가 주문 잊지말고 해주세요 ~~!");
 	        }
