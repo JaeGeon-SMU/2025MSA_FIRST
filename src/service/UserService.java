@@ -444,7 +444,7 @@ public class UserService {
  // 1) 한 달치 달력 테스트까지 되는 더미 유저 생성 & 저장
     public User createDummyUserWithFridgeAndMonthData() {
         String userId = "gihyeon";
-        String rawPassword = "1234";
+        String rawPassword = "qwer1234!@";
 
         // 비밀번호 해시 & 솔트
         String salt = SHA256PasswordSecurity.generateSalt();
