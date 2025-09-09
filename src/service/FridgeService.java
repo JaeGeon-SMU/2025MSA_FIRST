@@ -304,9 +304,11 @@ public class FridgeService extends recommendTemplate{
 	 */
 	public void checkFood(String name) {
 	    Queue<Food> queue = fridge.getFoodList().get(name);
-
-	    if (queue != null) {
-	        HomeFood food = (HomeFood) queue.peek();
+	    
+	    if(queue == null || queue.isEmpty()) {
+	    	System.out.println(name + "의 남은 수량: 0개");
+	    }else {
+	    	HomeFood food = (HomeFood) queue.peek();
 	        int currentCount = queue.size();
 	        int reorderPoint = food.getReorderPoint();
 
@@ -316,6 +318,7 @@ public class FridgeService extends recommendTemplate{
 	                + "개 이하입니다. 추가 주문 잊지말고 해주세요 ~~!");
 	        }
 	    }
+
 	}
 	
 	/*
@@ -336,10 +339,10 @@ public class FridgeService extends recommendTemplate{
 			list = new ArrayList<Food>();
 			user.getEatingHistory().put(LocalDate.now(), list);
 		}
-		checkFood(name);
 		Food remove = queue.remove();
 		list.add(remove);
 		System.out.println("냉장고에서 " + name + "을 꺼내 먹었습니다.");
+		checkFood(name);
 	}
 	
 	
@@ -485,7 +488,7 @@ public class FridgeService extends recommendTemplate{
 	 * 단백질과 칼로리는 높을수록 가점
 	 * 목표의 상한을 정하여 그 이상은 가점을 주지 않음
 	 */
-	private double scoring(Food food, int mealCalories, int mealProtein) {
+		public double scoring(Food food, int mealCalories, int mealProtein) {
 
 		double score = 0.0;
 		HomeFood homeFood = (HomeFood) food;
